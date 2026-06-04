@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baleríny pro dospělé — Bosono 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f9; color: #1a1a2e; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    color: white; padding: 40px 48px 32px;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; letter-spacing: -.5px; }
+  .header .sub { color: #8899bb; font-size: 13px; margin-top: 6px; }
+  .kpi-bar { display: flex; gap: 14px; margin-top: 26px; flex-wrap: wrap; }
+  .kpi {
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.13);
+    border-radius: 10px; padding: 15px 20px; min-width: 150px;
+  }
+  .kpi .lbl { font-size: 10px; color: #8899bb; text-transform: uppercase; letter-spacing: .8px; }
+  .kpi .val { font-size: 24px; font-weight: 700; margin-top: 4px; }
+  .kpi .d   { font-size: 11px; margin-top: 3px; }
+  .neg { color: #ff6b6b; } .pos { color: #51cf66; } .neu { color: #8899bb; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+  .section-title {
+    font-size: 17px; font-weight: 700; color: #0f3460;
+    border-left: 4px solid #0f3460; padding-left: 12px;
+    margin: 36px 0 18px;
+  }
+  .section-title.bl { border-color: #7B2D8B; color: #7B2D8B; }
+
+  /* CHART */
+  .chart-wrap {
+    background: white; border-radius: 12px; padding: 24px 28px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06); margin-bottom: 24px;
+  }
+  .chart-title { font-size: 13px; font-weight: 600; color: #555; margin-bottom: 22px; }
+
+  .chart-area {
+    display: flex; align-items: flex-end; gap: 6px;
+    height: 220px; padding-bottom: 0;
+  }
+  .divider {
+    width: 2px; background: #dde; border-radius: 1px;
+    align-self: stretch; margin: 0 4px; flex-shrink: 0;
+  }
+
+  .month-col {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0;
+    position: relative;
+  }
+  .bars-row {
+    display: flex; align-items: flex-end; gap: 3px;
+    width: 100%; height: 190px;
+  }
+  .bar {
+    flex: 1; border-radius: 4px 4px 0 0;
+    cursor: default; position: relative;
+    transition: filter .15s;
+    min-height: 3px;
+  }
+  .bar:hover { filter: brightness(1.12); }
+
+  /* Tooltip */
+  .bar::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%; transform: translateX(-50%);
+    background: #1a1a2e; color: white;
+    font-size: 11px; line-height: 1.5;
+    padding: 6px 10px; border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s;
+    z-index: 20;
+  }
+  .bar::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 1px);
+    left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1a1a2e;
+    opacity: 0; transition: opacity .15s;
+    z-index: 20;
+  }
+  .bar:hover::after, .bar:hover::before { opacity: 1; }
+
+  .bar-2025 { background: #b8d0f0; }
+  .bar-2025-summer { background: #7aa8d8; }
+  .bar-2026 { background: #0f3460; }
+
+  .month-lbl {
+    font-size: 10px; color: #999; margin-top: 6px; text-align: center;
+    white-space: nowrap;
+  }
+  .month-lbl.future { color: #bbb; font-style: italic; }
+  .month-lbl.now { color: #0f3460; font-weight: 700; }
+
+  /* Value labels above bars */
+  .bar-val {
+    font-size: 9px; color: #666; text-align: center;
+    margin-bottom: 2px; width: 100%;
+    display: flex; gap: 2px; justify-content: center;
+  }
+  .bar-val span { flex: 1; text-align: center; }
+
+  .chart-legend { display: flex; gap: 18px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #555; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .legend-note { font-size: 11px; color: #888; margin-left: auto; }
+
+  /* Summary boxes */
+  .summer-boxes {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; padding-top: 18px;
+    border-top: 1px dashed #e0e4f0;
+  }
+  .sbox {
+    flex: 1; min-width: 130px;
+    background: #f0f5ff; border-radius: 8px; padding: 12px 16px;
+  }
+  .sbox.total {
+    background: #e8f5e9; border: 1px solid #c8e6c9;
+  }
+  .sbox .slbl { font-size: 10px; color: #666; }
+  .sbox .sval { font-size: 19px; font-weight: 700; color: #0f3460; margin-top: 2px; }
+  .sbox.total .sval { color: #1b5e20; }
+  .sbox .sks  { font-size: 11px; color: #888; margin-top: 1px; }
+
+  /* Tabulka */
+  .card { background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.06); overflow: hidden; margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: #0f3460; color: white; padding: 11px 14px;
+    text-align: right; font-weight: 600; font-size: 11px; letter-spacing: .3px;
+  }
+  thead th:first-child { text-align: left; }
+  thead th.bl-head { background: #7B2D8B; }
+  tbody tr:nth-child(even) { background: #f8f9fd; }
+  tbody tr:hover { background: #eef2fb; }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; text-align: right; }
+  tbody td:first-child { text-align: left; font-weight: 500; }
+  .hl-row { background: #fdf6ff !important; }
+  .hl-row:hover { background: #f7ebff !important; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .up   { background: #d3f9d8; color: #2b8a3e; }
+  .dn   { background: #ffe3e3; color: #c92a2a; }
+  .new  { background: #e8f4fd; color: #1864ab; }
+  .gone { background: #f3f0ff; color: #6741d9; }
+
+  .marze-wrap { display: inline-flex; align-items: center; gap: 6px; }
+  .marze-fill { height: 6px; border-radius: 3px; background: #0f3460; display: inline-block; min-width: 2px; }
+
+  /* Be Lenka */
+  .bl-header {
+    background: linear-gradient(135deg, #7B2D8B, #5a1a6b);
+    color: white; padding: 20px 28px;
+  }
+  .bl-header h2 { font-size: 17px; }
+  .bl-header .bsub { font-size: 12px; color: rgba(255,255,255,.65); margin-top: 3px; }
+  .bl-kpi { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .bl-k { background: rgba(255,255,255,.12); border-radius: 8px; padding: 10px 16px; }
+  .bl-k .ll { font-size: 10px; color: rgba(255,255,255,.65); text-transform: uppercase; }
+  .bl-k .vv { font-size: 20px; font-weight: 700; }
+  .bl-k .dd { font-size: 11px; color: rgba(255,255,255,.6); }
+
+  .stock-table thead th { background: #7B2D8B; }
+  tbody tr.hl-bl { background: #fdf6ff !important; }
+  tbody tr.hl-bl:hover { background: #f5e8ff !important; }
+
+  .status-ok   { color: #2b8a3e; font-weight: 600; }
+  .status-warn { color: #e67700; font-weight: 600; }
+  .status-crit { color: #c92a2a; font-weight: 600; }
+  .status-over { color: #868e96; }
+  .status-gone { background: #ffe3e3; color: #c92a2a; font-weight: 600; padding: 2px 8px; border-radius: 20px; font-size: 11px; }
+
+  .warn-box {
+    background: #fff9db; border: 1px solid #ffd43b; border-radius: 8px;
+    padding: 12px 16px; font-size: 12px; color: #5c4a00; margin: 0 20px 20px;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media(max-width:680px) { .two-col { grid-template-columns: 1fr; } }
+
+  .insight-box { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+  .insight-box h4 { font-size: 13px; color: #555; margin-bottom: 12px; font-weight: 600; }
+  .insight { display: flex; gap: 9px; margin-bottom: 9px; font-size: 13px; align-items: flex-start; }
+  .insight .ic { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+  .footer { text-align: center; color: #aaa; font-size: 11px; padding: 28px; border-top: 1px solid #eee; margin-top: 16px; }
+
+  .pending { background: #fff8e1; border: 1px dashed #ffc107; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #7a5800; margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>Baleríny pro dospělé — Analýza prodejů</h1>
+  <div class="sub">Bosono s.r.o. · bosonozka.cz · CZ eshop · Filtr: pouze kategorie dospělé obuvi · 1. 1. – 22. 5. 2026 vs. 2025</div>
+  <div class="kpi-bar">
+    <div class="kpi">
+      <div class="lbl">Tržby 2026 YTD</div>
+      <div class="val">1 138 tis.</div>
+      <div class="d neg">▼ −32 % vs. 2025 (~1 676 tis.)</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Kusů prodáno</div>
+      <div class="val">747 ks</div>
+      <div class="d neg">▼ −25 % vs. 2025 (~995 ks)</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Aktivních značek</div>
+      <div class="val">19</div>
+      <div class="d pos">▲ +5 nových vs. 2025</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Prům. cena / ks</div>
+      <div class="val">~2 350 Kč</div>
+      <div class="d neu">s DPH · prémiový segment</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Nejsilnější značka</div>
+      <div class="val">Shapen</div>
+      <div class="d neu">182 tis. Kč · 93 ks</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TREND CHART -->
+  <div class="section-title">Měsíční trend — baleríny pro dospělé (CZ)</div>
+  <div class="chart-wrap">
+    <div class="chart-title">Tržby bez DPH · 2025 celá sezona + 2026 YTD &nbsp;·&nbsp; Najeď myší na sloupec pro detail</div>
+
+    <div class="chart-area">
+
+      <!-- JAN -->
+      <div class="month-col">
+        <div class="bar-val">
+          <span style="color:#b8d0f0">80 tis.</span>
+          <span style="color:#0f3460">78 tis.</span>
+        </div>
+        <div class="bars-row">
+          <div class="bar bar-2025" style="height:19%"
+               data-tip="Leden 2025&#10;~80 tis. Kč&#10;~55 ks"></div>
+          <div class="bar bar-2026" style="height:18%"
+               data-tip="Leden 2026&#10;~78 tis. Kč&#10;~53 ks"></div>
+        </div>
+        <div class="month-lbl">Led</div>
+      </div>
+
+      <!-- FEB -->
+      <div class="month-col">
+        <div class="bar-val">
+          <span style="color:#b8d0f0">90 tis.</span>
+          <span style="color:#0f3460">62 tis.</span>
+        </div>
+        <div class="bars-row">
+          <div class="bar bar-2025" style="height:21%"
+               data-tip="Únor 2025&#10;~90 tis. Kč&#10;~60 ks"></div>
+          <div class="bar bar-2026" style="height:15%"
+               data-tip="Únor 2026&#10;~62 tis. Kč&#10;~43 ks"></div>
+        </div>
+        <div class="month-lbl">Úno</div>
+      </div>
+
+      <!-- MAR -->
+      <div class="month-col">
+        <div class="bar-val">
+          <span style="color:#b8d0f0">380 tis.</span>
+          <span style="color:#0f3460">172 tis.</span>
+        </div>
+        <div class="bars-row">
+          <div class="bar bar-2025" style="height:68%"
+               data-tip="Březen 2025&#10;~380 tis. Kč&#10;~220 ks"></div>
+          <div class="bar bar-2026" style="height:31%"
+               data-tip="Březen 2026&#10;~172 tis. Kč&#10;~125 ks"></div>
+        </div>
+        <div class="month-lbl">Bře</div>
+      </div>
+
+      <!-- APR -->
+      <div class="month-col">
+        <div class="bar-val">
+          <span style="color:#b8d0f0">558 tis.</span>
+          <span style="color:#0f3460">390 tis.</span>
+        </div>
+        <div class="bars-row">
+          <div class="bar bar-2025" style="height:100%"
+               data-tip="Duben 2025&#10;558 tis. Kč ← max sezony&#10;~340 ks"></div>
+          <div class="bar bar-2026" style="height:70%"
+               data-tip="Duben 2026&#10;~390 tis. Kč&#10;~248 ks"></div>
+        </div>
+        <div class="month-lbl">Dub</div>
+      </div>
+
+      <!-- MAY -->
+      <div class="month-col">
+        <div class="bar-val">
+          <span style="color:#b8d0f0">568 tis.</span>
+          <span style="color:#0f3460">436 tis.</span>
+        </div>
+        <div class="bars-row">
+          <div class="bar bar-2025" style="height:102%"
+               data-tip="Květen 2025&#10;~568 tis. Kč&#10;~320 ks (do 22.5.)"></div>
+          <div class="bar bar-2026" style="height:78%"
+               data-tip="Květen 2026&#10;~436 tis. Kč&#10;~283 ks (do 22.5.) ⭐"></div>
+        </div>
+        <div class="month-lbl now">Kvě ⭐</div>
+      </div>
+
+      <!-- DIVIDER -->
+      <div class="divider"></div>
+
+      <!-- JUN 2025 -->
+      <div class="month-col">
+        <div class="bar-val"><span style="color:#7aa8d8">441 tis.</span></div>
+        <div class="bars-row">
+          <div class="bar bar-2025-summer" style="height:79%"
+               data-tip="Červen 2025&#10;441 tis. Kč&#10;253 ks"></div>
+        </div>
+        <div class="month-lbl future">Čvn</div>
+      </div>
+
+      <!-- JUL 2025 -->
+      <div class="month-col">
+        <div class="bar-val"><span style="color:#7aa8d8">439 tis.</span></div>
+        <div class="bars-row">
+          <div class="bar bar-2025-summer" style="height:79%"
+               data-tip="Červenec 2025&#10;439 tis. Kč&#10;303 ks ← letní peak"></div>
+        </div>
+        <div class="month-lbl future">Čvc</div>
+      </div>
+
+      <!-- AUG 2025 -->
+      <div class="month-col">
+        <div class="bar-val"><span style="color:#7aa8d8">229 tis.</span></div>
+        <div class="bars-row">
+          <div class="bar bar-2025-summer" style="height:41%"
+               data-tip="Srpen 2025&#10;229 tis. Kč&#10;139 ks"></div>
+        </div>
+        <div class="month-lbl future">Srp</div>
+      </div>
+
+      <!-- SEP 2025 -->
+      <div class="month-col">
+        <div class="bar-val"><span style="color:#7aa8d8">156 tis.</span></div>
+        <div class="bars-row">
+          <div class="bar bar-2025-summer" style="height:28%"
+               data-tip="Září 2025&#10;156 tis. Kč&#10;82 ks"></div>
+        </div>
+        <div class="month-lbl future">Zář</div>
+      </div>
+
+    </div><!-- chart-area -->
+
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#b8d0f0"></div>2025 (Jan–Kvě)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#0f3460"></div>2026 (Jan–Kvě)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7aa8d8"></div>2025 — léto (odhad)</div>
+      <div class="legend-note">Svislá čára = konec srovnávacího období · Pravá část = zbytek sezony 2025</div>
+    </div>
+
+    <!-- Letní boxy — přesná data -->
+    <div class="summer-boxes">
+      <div style="font-size:12px; font-weight:600; color:#555; width:100%; margin-bottom:4px;">
+        📅 Zbytek sezony 2025 — pouze dospělé baleríny (přesná data):
+      </div>
+      <div class="sbox">
+        <div class="slbl">Červen 2025</div>
+        <div class="sval">441 tis.</div>
+        <div class="sks">253 ks</div>
+      </div>
+      <div class="sbox">
+        <div class="slbl">Červenec 2025</div>
+        <div class="sval">439 tis.</div>
+        <div class="sks">303 ks ← letní peak</div>
+      </div>
+      <div class="sbox">
+        <div class="slbl">Srpen 2025</div>
+        <div class="sval">229 tis.</div>
+        <div class="sks">139 ks</div>
+      </div>
+      <div class="sbox">
+        <div class="slbl">Září 2025</div>
+        <div class="sval">156 tis.</div>
+        <div class="sks">82 ks</div>
+      </div>
+      <div class="sbox total">
+        <div class="slbl">Čvn–Zář celkem 2025</div>
+        <div class="sval">1 265 tis.</div>
+        <div class="sks">777 ks · sezona nekončí v květnu!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABULKA ZNAČEK YOY -->
+  <div class="section-title">Srovnání značek — 1. 1. až 22. 5. (2025 vs. 2026) · pouze dospělé</div>
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Značka</th>
+          <th>Ks 2026</th>
+          <th>Tržby 2026</th>
+          <th>Marže</th>
+          <th>Prům. cena</th>
+          <th>Ks 2025</th>
+          <th>Tržby 2025</th>
+          <th>Změna</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Shapen</td><td>93</td><td>182 116 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:26px"></div>26,2 %</div></td>
+          <td>2 547 Kč</td><td>215</td><td>463 026 Kč</td>
+          <td><span class="badge dn">▼ −61 %</span></td>
+        </tr>
+        <tr class="hl-row">
+          <td><strong>Be Lenka ★</strong></td><td>87</td><td>173 850 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:38px; background:#7B2D8B"></div>37,5 %</div></td>
+          <td>2 611 Kč</td><td>137</td><td>308 757 Kč</td>
+          <td><span class="badge dn">▼ −44 %</span></td>
+        </tr>
+        <tr>
+          <td>Xero shoes</td><td>104</td><td>161 618 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:42px"></div>42,2 %</div></td>
+          <td>2 042 Kč</td><td>94</td><td>151 610 Kč</td>
+          <td><span class="badge up">▲ +7 %</span></td>
+        </tr>
+        <tr>
+          <td>Aylla</td><td>74</td><td>146 353 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:33px"></div>33,3 %</div></td>
+          <td>2 558 Kč</td><td>47</td><td>109 924 Kč</td>
+          <td><span class="badge up">▲ +33 %</span></td>
+        </tr>
+        <tr>
+          <td>Ahinsa</td><td>53</td><td>106 493 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:48px"></div><strong>47,7 %</strong></div></td>
+          <td>2 592 Kč</td><td>78</td><td>161 958 Kč</td>
+          <td><span class="badge dn">▼ −34 %</span></td>
+        </tr>
+        <tr>
+          <td>Jampi</td><td>53</td><td>56 713 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:27px"></div>26,5 %</div></td>
+          <td>1 431 Kč</td><td>18</td><td>22 575 Kč</td>
+          <td><span class="badge up">▲ +151 %</span></td>
+        </tr>
+        <tr>
+          <td>KOEL</td><td>30</td><td>55 279 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:42px"></div>42,4 %</div></td>
+          <td>2 333 Kč</td><td>31</td><td>63 894 Kč</td>
+          <td><span class="badge dn">▼ −13 %</span></td>
+        </tr>
+        <tr>
+          <td>Peerko</td><td>31</td><td>51 082 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:22px"></div>21,9 %</div></td>
+          <td>2 123 Kč</td><td>37</td><td>70 495 Kč</td>
+          <td><span class="badge dn">▼ −28 %</span></td>
+        </tr>
+        <tr>
+          <td>MTNG</td><td>25</td><td>36 750 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:45px"></div>45,1 %</div></td>
+          <td>1 906 Kč</td><td>0</td><td>—</td>
+          <td><span class="badge new">Nová</span></td>
+        </tr>
+        <tr>
+          <td>Leguano</td><td>15</td><td>34 173 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:19px"></div>19,2 %</div></td>
+          <td>2 757 Kč</td><td>31</td><td>95 158 Kč</td>
+          <td><span class="badge dn">▼ −64 %</span></td>
+        </tr>
+        <tr>
+          <td>OK bare</td><td>14</td><td>27 475 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:39px"></div>39,4 %</div></td>
+          <td>2 527 Kč</td><td>0</td><td>—</td>
+          <td><span class="badge new">Nová</span></td>
+        </tr>
+        <tr>
+          <td>Saltic</td><td>14</td><td>24 011 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:28px"></div>27,9 %</div></td>
+          <td>2 181 Kč</td><td>65</td><td>128 679 Kč</td>
+          <td><span class="badge dn">▼ −81 %</span></td>
+        </tr>
+        <tr>
+          <td>Zaqq</td><td>9</td><td>16 018 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:11px"></div>10,7 %</div></td>
+          <td>2 202 Kč</td><td>3</td><td>8 770 Kč</td>
+          <td><span class="badge up">▲ +83 %</span></td>
+        </tr>
+        <tr>
+          <td>Wild</td><td>5</td><td>8 993 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:44px"></div>44,2 %</div></td>
+          <td>2 342 Kč</td><td>0</td><td>—</td>
+          <td><span class="badge new">Nová</span></td>
+        </tr>
+        <tr>
+          <td>Fare</td><td>11</td><td>12 724 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:28px"></div>28,2 %</div></td>
+          <td>1 510 Kč</td><td>0</td><td>—</td>
+          <td><span class="badge new">Nová</span></td>
+        </tr>
+        <tr>
+          <td>Froddo</td><td>6</td><td>7 913 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:41px"></div>41,3 %</div></td>
+          <td>1 656 Kč</td><td>0</td><td>—</td>
+          <td><span class="badge new">Nová</span></td>
+        </tr>
+        <tr>
+          <td>Beda</td><td>3</td><td>3 620 Kč</td>
+          <td><div class="marze-wrap"><div class="marze-fill" style="width:26px"></div>25,7 %</div></td>
+          <td>1 541 Kč</td><td>12</td><td>16 356 Kč</td>
+          <td><span class="badge dn">▼ −78 %</span></td>
+        </tr>
+        <tr>
+          <td style="color:#aaa; font-size:12px;">Vivobarefoot, Protetika, Fare Bare</td>
+          <td style="color:#aaa">0</td><td style="color:#aaa">—</td><td></td><td></td>
+          <td style="color:#aaa">—</td><td style="color:#aaa">~13 tis. Kč</td>
+          <td><span class="badge gone">Vypadly</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- INSIGHTY -->
+  <div class="two-col">
+    <div class="insight-box">
+      <h4>🚀 Nejsilnější signály 2026</h4>
+      <div class="insight"><span class="ic">📈</span><span><strong>Jampi</strong> — +151 %, z 22 tis. na 57 tis. Kč. Nejrychleji rostoucí značka.</span></div>
+      <div class="insight"><span class="ic">📈</span><span><strong>Xero shoes</strong> — stabilní +7 %, nejvyšší objem kusů (104 ks).</span></div>
+      <div class="insight"><span class="ic">📈</span><span><strong>Aylla</strong> — +33 %, s dobrou marží 33 %.</span></div>
+      <div class="insight"><span class="ic">🆕</span><span><strong>5 nových značek</strong>: MTNG, OK bare, Wild, Fare, Froddo — segment se rozšiřuje.</span></div>
+      <div class="insight"><span class="ic">💰</span><span><strong>Ahinsa</strong> — nejvyšší marže 47,7 % i přes pokles objemu.</span></div>
+    </div>
+    <div class="insight-box">
+      <h4>⚠️ Výrazné propady</h4>
+      <div class="insight"><span class="ic">📉</span><span><strong>Shapen</strong> — −61 %, z 463 tis. na 182 tis. Kč. Největší absolutní ztráta v segmentu.</span></div>
+      <div class="insight"><span class="ic">📉</span><span><strong>Saltic</strong> — −81 %. Prakticky vypadla ze segmentu.</span></div>
+      <div class="insight"><span class="ic">📉</span><span><strong>Leguano</strong> — −64 %, z 95 tis. na 34 tis. Kč.</span></div>
+      <div class="insight"><span class="ic">📉</span><span><strong>Be Lenka</strong> — −44 % vs. loni, ale stále 2. místo v tržbách a nejlepší marže v top 5.</span></div>
+    </div>
+  </div>
+
+  <!-- BE LENKA SEKCE -->
+  <div class="section-title bl">Be Lenka — detailní pohled (pouze dospělé baleríny)</div>
+  <div class="card">
+    <div class="bl-header">
+      <h2>Be Lenka Baleríny — dospělé · 2026 YTD</h2>
+      <div class="bsub">CZ eshop · 1. 1. – 22. 5. 2026 · kategorie: Obuv pro dospělé</div>
+      <div class="bl-kpi">
+        <div class="bl-k">
+          <div class="ll">Tržby bez DPH</div>
+          <div class="vv">173 850 Kč</div>
+          <div class="dd">▼ −44 % vs. 308 757 Kč (2025)</div>
+        </div>
+        <div class="bl-k">
+          <div class="ll">Kusů prodáno</div>
+          <div class="vv">87 ks</div>
+          <div class="dd">▼ −37 % vs. 137 ks (2025)</div>
+        </div>
+        <div class="bl-k">
+          <div class="ll">Průměrná marže</div>
+          <div class="vv">37,5 %</div>
+          <div class="dd">2. nejlepší z TOP 5 značek</div>
+        </div>
+        <div class="bl-k">
+          <div class="ll">Průměrná cena / ks</div>
+          <div class="vv">2 611 Kč</div>
+          <div class="dd">s DPH · premium positioning</div>
+        </div>
+        <div class="bl-k">
+          <div class="ll">Sklad celkem</div>
+          <div class="vv">42 ks</div>
+          <div class="dd">k 19. 5. 2026 · 13 modelů</div>
+        </div>
+      </div>
+    </div>
+
+    <table class="stock-table">
+      <thead>
+        <tr>
+          <th style="text-align:left">Model</th>
+          <th>Prodáno</th>
+          <th>Cena s DPH</th>
+          <th>Marže</th>
+          <th>Sklad</th>
+          <th>Vel.</th>
+          <th>Výdrž skladu</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Delight Black černé</td><td>12 ks</td><td>2 511 Kč</td><td>35,1 %</td><td>6 ks</td><td>5</td>
+          <td class="status-ok">✓ Dostatek</td>
+        </tr>
+        <tr>
+          <td>Bellissima 2.0 Toffee Brown</td><td>11 ks</td><td>2 714 Kč</td><td>37,2 %</td><td>3 ks</td><td>3</td>
+          <td class="status-ok">✓ Dostatek</td>
+        </tr>
+        <tr>
+          <td>Delight Biscuit Brown</td><td>11 ks</td><td>2 543 Kč</td><td>38,9 %</td><td>1 ks</td><td>1</td>
+          <td class="status-crit">⚡ Kritické — 1 ks!</td>
+        </tr>
+        <tr>
+          <td>Florence Dark Brown</td><td>9 ks</td><td>2 714 Kč</td><td>36,7 %</td><td>1 ks</td><td>1</td>
+          <td class="status-crit">⚡ Kritické — 1 ks!</td>
+        </tr>
+        <tr>
+          <td>Delight Light Pink růžové</td><td>9 ks</td><td>2 566 Kč</td><td>31,5 %</td><td>14 ks</td><td>5</td>
+          <td class="status-over">↓ Přebytek</td>
+        </tr>
+        <tr>
+          <td>Sophie Matt Black</td><td>9 ks</td><td>2 564 Kč</td><td><strong>45,8 %</strong></td><td>2 ks</td><td>1</td>
+          <td class="status-warn">⚠ Doplnit brzy</td>
+        </tr>
+        <tr>
+          <td>Sophie All Chalk White</td><td>9 ks</td><td>2 511 Kč</td><td>37,5 %</td><td>2 ks</td><td>2</td>
+          <td class="status-warn">⚠ Doplnit brzy</td>
+        </tr>
+        <tr>
+          <td>Bellissima 2.0 Gold zlaté</td><td>8 ks</td><td>2 819 Kč</td><td>36,9 %</td><td>2 ks</td><td>2</td>
+          <td class="status-warn">⚠ Doplnit brzy</td>
+        </tr>
+        <tr>
+          <td>Bellissima 2.0 All Black</td><td>8 ks</td><td>2 691 Kč</td><td>36,4 %</td><td>1 ks</td><td>1</td>
+          <td class="status-crit">⚡ Kritické — 1 ks!</td>
+        </tr>
+        <tr>
+          <td>Bellissima 2.0 Rose Gold</td><td>7 ks</td><td>2 742 Kč</td><td>35,8 %</td><td>2 ks</td><td>2</td>
+          <td class="status-warn">⚠ Doplnit brzy</td>
+        </tr>
+        <tr>
+          <td>Sophie Toffee Brown</td><td>3 ks</td><td>2 511 Kč</td><td>37,8 %</td><td>3 ks</td><td>3</td>
+          <td class="status-ok">✓ Dostatek</td>
+        </tr>
+        <tr>
+          <td>Sophelia Matt Black</td><td>1 ks</td><td>2 734 Kč</td><td><strong>48,3 %</strong></td><td>4 ks</td><td>4</td>
+          <td class="status-over">↓ Pomalá rotace</td>
+        </tr>
+        <tr>
+          <td>Florence Black černé</td><td>1 ks</td><td>2 811 Kč</td><td>42,4 %</td><td>1 ks</td><td>1</td>
+          <td class="status-over">↓ Pomalá rotace</td>
+        </tr>
+        <tr>
+          <td>Harmony Nude Pink</td><td>1 ks</td><td>1 690 Kč</td><td style="color:#e67700">8,0 %</td><td>0 ks</td><td>0</td>
+          <td><span class="status-gone">VYPRODÁNO</span></td>
+        </tr>
+        <tr>
+          <td>Delight Navy & Black</td><td>1 ks</td><td>2 237 Kč</td><td>26,3 %</td><td>0 ks</td><td>0</td>
+          <td><span class="status-gone">VYPRODÁNO</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="warn-box">
+      ⚠️ <strong>Pozor na letní sezonu:</strong> Segment dospělých balerínek prodal loni v červnu <strong>253 ks</strong> a v červenci <strong>303 ks</strong>.
+      Be Lenka z toho loni tvořila přes 200 ks (čvn–zář). Aktuální sklad Be Lenka: jen <strong>42 ks</strong> — při loňském tempu vydrží cca 1 týden.
+      Prioritní objednávka: Delight Biscuit Brown, Florence Dark Brown, Bellissima All Black, Sophie Matt Black.
+    </div>
+  </div>
+
+</div><!-- container -->
+
+<div class="footer">
+  Bosono s.r.o. · bosonozka.cz · Data: Shoptet CZ · Filtr: kategorie dospělé obuvi (bez Dětská obuv / Kinderschuhe) · Sklad: 19. 5. 2026
+</div>
+
+</body>
+</html>
