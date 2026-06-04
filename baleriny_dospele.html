@@ -155,6 +155,7 @@
   .dn   { background: #ffe3e3; color: #c92a2a; }
   .new  { background: #e8f4fd; color: #1864ab; }
   .gone { background: #f3f0ff; color: #6741d9; }
+  .nd { color: #bbb; font-size: 11px; font-style: italic; }
 
   .marze-wrap { display: inline-flex; align-items: center; gap: 6px; }
   .marze-fill { height: 6px; border-radius: 3px; background: #0f3460; display: inline-block; min-width: 2px; }
@@ -371,10 +372,25 @@
       <div class="legend-note">Svislá čára = konec srovnávacího období · Pravá část = zbytek sezony 2025</div>
     </div>
 
-    <!-- Letní boxy — přesná data -->
+    <!-- Měsíční přehled březen–září 2025 -->
     <div class="summer-boxes">
       <div style="font-size:12px; font-weight:600; color:#555; width:100%; margin-bottom:4px;">
-        📅 Zbytek sezony 2025 — pouze dospělé baleríny (přesná data):
+        📅 Sezona 2025 — pouze dospělé baleríny · březen až září (přesná data):
+      </div>
+      <div class="sbox" style="background:#e8f0fe; border:1px solid #c5d4f7;">
+        <div class="slbl" style="color:#1a56db;">Březen 2025</div>
+        <div class="sval" style="color:#1a56db;">447 tis.</div>
+        <div class="sks">209 ks</div>
+      </div>
+      <div class="sbox" style="background:#e8f0fe; border:1px solid #c5d4f7;">
+        <div class="slbl" style="color:#1a56db;">Duben 2025</div>
+        <div class="sval" style="color:#1a56db;">514 tis.</div>
+        <div class="sks">241 ks ← jarní peak</div>
+      </div>
+      <div class="sbox" style="background:#e8f0fe; border:1px solid #c5d4f7;">
+        <div class="slbl" style="color:#1a56db;">Květen 2025</div>
+        <div class="sval" style="color:#1a56db;">523 tis.</div>
+        <div class="sks">268 ks</div>
       </div>
       <div class="sbox">
         <div class="slbl">Červen 2025</div>
@@ -397,9 +413,9 @@
         <div class="sks">82 ks</div>
       </div>
       <div class="sbox total">
-        <div class="slbl">Čvn–Zář celkem 2025</div>
-        <div class="sval">1 265 tis.</div>
-        <div class="sks">777 ks · sezona nekončí v květnu!</div>
+        <div class="slbl">Bře–Zář celkem 2025</div>
+        <div class="sval">2 749 tis.</div>
+        <div class="sks">1 495 ks · 7 měsíců sezony</div>
       </div>
     </div>
   </div>
@@ -413,124 +429,129 @@
           <th>Značka</th>
           <th>Ks 2026</th>
           <th>Tržby 2026</th>
-          <th>Marže</th>
+          <th>Marže 2026</th>
           <th>Prům. cena</th>
-          <th>Ks 2025</th>
-          <th>Tržby 2025</th>
-          <th>Změna</th>
+          <th>Ks 2025 celý rok</th>
+          <th>Tržby 2025 celý rok</th>
+          <th>Marže 2025</th>
+          <th>Změna YTD</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Shapen</td><td>93</td><td>182 116 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:26px"></div>26,2 %</div></td>
-          <td>2 547 Kč</td><td>215</td><td>463 026 Kč</td>
-          <td><span class="badge dn">▼ −61 %</span></td>
+          <td>2 547 Kč</td><td>353</td><td>742 118 Kč</td>
+          <td class="nd">—</td><td><span class="badge dn">▼ −61 % YTD</span></td>
         </tr>
         <tr class="hl-row">
           <td><strong>Be Lenka ★</strong></td><td>87</td><td>173 850 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:38px; background:#7B2D8B"></div>37,5 %</div></td>
-          <td>2 611 Kč</td><td>137</td><td>308 757 Kč</td>
-          <td><span class="badge dn">▼ −44 %</span></td>
+          <td>2 611 Kč</td><td>379</td><td>751 576 Kč</td>
+          <td class="nd">—</td><td><span class="badge dn">▼ −44 % YTD</span></td>
         </tr>
         <tr>
           <td>Xero shoes</td><td>104</td><td>161 618 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:42px"></div>42,2 %</div></td>
-          <td>2 042 Kč</td><td>94</td><td>151 610 Kč</td>
-          <td><span class="badge up">▲ +7 %</span></td>
+          <td>2 042 Kč</td><td>255</td><td>368 271 Kč</td>
+          <td class="nd">—</td><td><span class="badge up">▲ +7 % YTD</span></td>
         </tr>
         <tr>
           <td>Aylla</td><td>74</td><td>146 353 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:33px"></div>33,3 %</div></td>
-          <td>2 558 Kč</td><td>47</td><td>109 924 Kč</td>
-          <td><span class="badge up">▲ +33 %</span></td>
+          <td>2 558 Kč</td><td>95</td><td>213 297 Kč</td>
+          <td class="nd">—</td><td><span class="badge up">▲ +33 % YTD</span></td>
         </tr>
         <tr>
           <td>Ahinsa</td><td>53</td><td>106 493 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:48px"></div><strong>47,7 %</strong></div></td>
-          <td>2 592 Kč</td><td>78</td><td>161 958 Kč</td>
-          <td><span class="badge dn">▼ −34 %</span></td>
+          <td>2 592 Kč</td><td>112</td><td>230 760 Kč</td>
+          <td class="nd">—</td><td><span class="badge dn">▼ −34 % YTD</span></td>
         </tr>
         <tr>
           <td>Jampi</td><td>53</td><td>56 713 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:27px"></div>26,5 %</div></td>
-          <td>1 431 Kč</td><td>18</td><td>22 575 Kč</td>
-          <td><span class="badge up">▲ +151 %</span></td>
+          <td>1 431 Kč</td><td>130</td><td>137 782 Kč</td>
+          <td class="nd">—</td><td><span class="badge up">▲ +151 % YTD</span></td>
         </tr>
         <tr>
           <td>KOEL</td><td>30</td><td>55 279 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:42px"></div>42,4 %</div></td>
-          <td>2 333 Kč</td><td>31</td><td>63 894 Kč</td>
-          <td><span class="badge dn">▼ −13 %</span></td>
+          <td>2 333 Kč</td><td>40</td><td>81 339 Kč</td>
+          <td class="nd">—</td><td><span class="badge dn">▼ −13 % YTD</span></td>
         </tr>
         <tr>
           <td>Peerko</td><td>31</td><td>51 082 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:22px"></div>21,9 %</div></td>
-          <td>2 123 Kč</td><td>37</td><td>70 495 Kč</td>
-          <td><span class="badge dn">▼ −28 %</span></td>
+          <td>2 123 Kč</td><td>57</td><td>107 328 Kč</td>
+          <td class="nd">—</td><td><span class="badge dn">▼ −28 % YTD</span></td>
         </tr>
         <tr>
           <td>MTNG</td><td>25</td><td>36 750 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:45px"></div>45,1 %</div></td>
           <td>1 906 Kč</td><td>0</td><td>—</td>
-          <td><span class="badge new">Nová</span></td>
+          <td class="nd">—</td><td><span class="badge new">Nová</span></td>
         </tr>
         <tr>
           <td>Leguano</td><td>15</td><td>34 173 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:19px"></div>19,2 %</div></td>
-          <td>2 757 Kč</td><td>31</td><td>95 158 Kč</td>
-          <td><span class="badge dn">▼ −64 %</span></td>
+          <td>2 757 Kč</td><td>51</td><td>148 232 Kč</td>
+          <td class="nd">—</td><td><span class="badge dn">▼ −64 % YTD</span></td>
         </tr>
         <tr>
           <td>OK bare</td><td>14</td><td>27 475 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:39px"></div>39,4 %</div></td>
           <td>2 527 Kč</td><td>0</td><td>—</td>
-          <td><span class="badge new">Nová</span></td>
+          <td class="nd">—</td><td><span class="badge new">Nová</span></td>
         </tr>
         <tr>
           <td>Saltic</td><td>14</td><td>24 011 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:28px"></div>27,9 %</div></td>
-          <td>2 181 Kč</td><td>65</td><td>128 679 Kč</td>
-          <td><span class="badge dn">▼ −81 %</span></td>
+          <td>2 181 Kč</td><td>103</td><td>202 476 Kč</td>
+          <td class="nd">—</td><td><span class="badge dn">▼ −81 % YTD</span></td>
         </tr>
         <tr>
           <td>Zaqq</td><td>9</td><td>16 018 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:11px"></div>10,7 %</div></td>
-          <td>2 202 Kč</td><td>3</td><td>8 770 Kč</td>
-          <td><span class="badge up">▲ +83 %</span></td>
+          <td>2 202 Kč</td><td>10</td><td>23 136 Kč</td>
+          <td class="nd">—</td><td><span class="badge up">▲ +83 % YTD</span></td>
         </tr>
         <tr>
           <td>Wild</td><td>5</td><td>8 993 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:44px"></div>44,2 %</div></td>
           <td>2 342 Kč</td><td>0</td><td>—</td>
-          <td><span class="badge new">Nová</span></td>
+          <td class="nd">—</td><td><span class="badge new">Nová</span></td>
         </tr>
         <tr>
           <td>Fare</td><td>11</td><td>12 724 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:28px"></div>28,2 %</div></td>
-          <td>1 510 Kč</td><td>0</td><td>—</td>
-          <td><span class="badge new">Nová</span></td>
+          <td>1 510 Kč</td><td>50</td><td>55 795 Kč</td>
+          <td class="nd">—</td><td><span class="badge new">Nová v 2026</span></td>
         </tr>
         <tr>
           <td>Froddo</td><td>6</td><td>7 913 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:41px"></div>41,3 %</div></td>
           <td>1 656 Kč</td><td>0</td><td>—</td>
-          <td><span class="badge new">Nová</span></td>
+          <td class="nd">—</td><td><span class="badge new">Nová</span></td>
         </tr>
         <tr>
           <td>Beda</td><td>3</td><td>3 620 Kč</td>
           <td><div class="marze-wrap"><div class="marze-fill" style="width:26px"></div>25,7 %</div></td>
-          <td>1 541 Kč</td><td>12</td><td>16 356 Kč</td>
-          <td><span class="badge dn">▼ −78 %</span></td>
+          <td>1 541 Kč</td><td>20</td><td>27 209 Kč</td>
+          <td class="nd">—</td><td><span class="badge dn">▼ −78 % YTD</span></td>
         </tr>
         <tr>
           <td style="color:#aaa; font-size:12px;">Vivobarefoot, Protetika, Fare Bare</td>
           <td style="color:#aaa">0</td><td style="color:#aaa">—</td><td></td><td></td>
-          <td style="color:#aaa">—</td><td style="color:#aaa">~13 tis. Kč</td>
-          <td><span class="badge gone">Vypadly</span></td>
+          <td style="color:#aaa">—</td><td style="color:#aaa">~33 tis. Kč</td>
+          <td class="nd">—</td><td><span class="badge gone">Vypadly</span></td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div style="background:#f8f9fd; border:1px solid #e0e4f0; border-radius:8px; padding:10px 16px; font-size:12px; color:#666; margin-bottom:24px;">
+    ℹ️ <strong>Marže 2025 — data nedostupná:</strong> Nákupní ceny nebyly v roce 2025 nahrané do Shoptetu, proto nelze marži za 2025 spočítat. Tržby 2025 v tabulce jsou za celý rok (leden–prosinec), sloupec YTD porovnává jen stejné období (1. 1.–22. 5.).
   </div>
 
   <!-- INSIGHTY -->
