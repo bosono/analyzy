@@ -326,33 +326,178 @@ tbody tr:hover{background:var(--sur2);}
 
 <!-- KROK 4: KATEGORIE -->
 <div class="sec" id="categories">
-  <div class="sec-title">4. Kategoriální breakdown — skutečná DB data</div>
+  <div class="sec-title">4. Kategoriální breakdown — všechny Shoptet kategorie (DB)</div>
   <div class="alert" style="margin-bottom:10px;">
-    Kategorie = Shoptet <code>default_category_name</code>, ověřeno JOIN přes <code>shoptet_product_variants → shoptet_products</code> (CZ site). Prodeje = skutečné transakce 15.–28. 6. 2026.
+    Pohled přes <strong>všechny kategorie produktu</strong> (ne jen defaultní) — jeden produkt se může počítat ve více kategoriích, součty se tedy nesčítají. Vyloučeny: značky, promo/sezónní štítky (Slevy, SS26, Letní výprodej…), gender/věkové navigační kategorie. Prodeje = skutečné transakce 15.–28. 6. 2026.
   </div>
   <div class="twrap">
     <table><thead><tr>
       <th>Kategorie</th><th class="num">SKU</th><th class="num">Sklad (ks)</th><th class="num">Vázaný kap.</th>
-      <th class="num">Ø sleva</th><th class="num">Ø marže</th>
-      <th class="num">Prodáno (14d)</th><th class="num">Obrat (14d)</th>
-      <th class="num">Marže %</th><th class="num">Sell-through</th><th class="num">Dny do výprodeje</th>
+      <th class="num">Ø sleva</th><th class="num">Ø marže po slevě</th>
+      <th class="num">Prodáno (14d)</th><th class="num">Obrat (14d)</th><th class="num">Marže %</th>
+      <th class="num">Sell-through</th><th class="num">Dny do výprodeje</th>
     </tr></thead>
-    <tbody>
-      <tr><td><strong>Sandály</strong></td><td class="num">1 385</td><td class="num">3 748</td><td class="num">2 958 k</td><td class="num">32 %</td><td class="num">27 %</td><td class="num">334</td><td class="num">407 k</td><td class="num">35.9 %</td><td class="num"><span class="badge badge-warning">8.9 %</span></td><td class="num"><span class="badge badge-danger">157d</span></td></tr>
-      <tr><td><strong>Barefoot plátěnky</strong></td><td class="num">376</td><td class="num">1 437</td><td class="num">751 k</td><td class="num">31 %</td><td class="num">25 %</td><td class="num">74</td><td class="num">55 k</td><td class="num">28.1 %</td><td class="num"><span class="badge badge-warning">5.2 %</span></td><td class="num"><span class="badge badge-danger">272d</span></td></tr>
-      <tr><td><strong>Baleríny</strong></td><td class="num">372</td><td class="num">733</td><td class="num">765 k</td><td class="num">33 %</td><td class="num">23 %</td><td class="num">25</td><td class="num">38 k</td><td class="num">36.8 %</td><td class="num"><span class="badge badge-danger">3.4 %</span></td><td class="num"><span class="badge badge-danger">410d</span></td></tr>
-      <tr><td><strong>Plátěnky</strong></td><td class="num">117</td><td class="num">466</td><td class="num">376 k</td><td class="num">33 %</td><td class="num">26 %</td><td class="num">31</td><td class="num">31 k</td><td class="num">27.4 %</td><td class="num"><span class="badge badge-danger">6.6 %</span></td><td class="num"><span class="badge badge-danger">211d</span></td></tr>
-      <tr><td><strong>Obuv do vody</strong></td><td class="num">42</td><td class="num">224</td><td class="num">41 k</td><td class="num">31 %</td><td class="num">40 %</td><td class="num">29</td><td class="num">12 k</td><td class="num">50.2 %</td><td class="num"><span class="badge badge-ok">12.9 %</span></td><td class="num"><span class="badge badge-ok">108d</span></td></tr>
-      <tr><td><strong>Mokasíny</strong></td><td class="num">63</td><td class="num">113</td><td class="num">143 k</td><td class="num">34 %</td><td class="num">24 %</td><td class="num">2</td><td class="num">4 k</td><td class="num">53.0 %</td><td class="num"><span class="badge badge-danger">1.8 %</span></td><td class="num"><span class="badge badge-danger">791d</span></td></tr>
-    </tbody>
-    <tfoot><tr style="font-weight:600;border-top:1px solid #3d4266;">
-      <td>CELKEM</td><td class="num">2 355</td><td class="num">6 721</td><td class="num">5 034 k</td><td class="num">—</td><td class="num">—</td><td class="num">495</td><td class="num">548 k</td><td class="num">—</td><td class="num"><span class="badge badge-warning">7.4 %</span></td><td class="num">—</td>
-    </tr></tfoot>
+    <tbody><tr>
+      <td><strong>Sandály</strong></td>
+      <td class="num">1397</td>
+      <td class="num">6,324</td>
+      <td class="num">5088 k</td>
+      <td class="num">32 %</td>
+      <td class="num">28 %</td>
+      <td class="num">543</td>
+      <td class="num">688 k</td>
+      <td class="num">37.1 %</td>
+      <td class="num"><span class="badge badge-warning">8.6 %</span></td>
+      <td class="num"><span class="badge badge-danger">163d</span></td>
+    </tr><tr>
+      <td><strong>Barefoot plátěnky</strong></td>
+      <td class="num">449</td>
+      <td class="num">1,730</td>
+      <td class="num">975 k</td>
+      <td class="num">31 %</td>
+      <td class="num">25 %</td>
+      <td class="num">98</td>
+      <td class="num">77 k</td>
+      <td class="num">27.7 %</td>
+      <td class="num"><span class="badge badge-warning">5.7 %</span></td>
+      <td class="num"><span class="badge badge-danger">247d</span></td>
+    </tr><tr>
+      <td><strong>Obuv pod kotník - tenisky</strong></td>
+      <td class="num">420</td>
+      <td class="num">1,641</td>
+      <td class="num">887 k</td>
+      <td class="num">31 %</td>
+      <td class="num">25 %</td>
+      <td class="num">99</td>
+      <td class="num">79 k</td>
+      <td class="num">27.0 %</td>
+      <td class="num"><span class="badge badge-warning">6.0 %</span></td>
+      <td class="num"><span class="badge badge-danger">232d</span></td>
+    </tr><tr>
+      <td><strong>Tenisky</strong></td>
+      <td class="num">129</td>
+      <td class="num">1,069</td>
+      <td class="num">888 k</td>
+      <td class="num">33 %</td>
+      <td class="num">25 %</td>
+      <td class="num">68</td>
+      <td class="num">69 k</td>
+      <td class="num">27.9 %</td>
+      <td class="num"><span class="badge badge-warning">6.4 %</span></td>
+      <td class="num"><span class="badge badge-danger">220d</span></td>
+    </tr><tr>
+      <td><strong>Společenská obuv</strong></td>
+      <td class="num">296</td>
+      <td class="num">1,022</td>
+      <td class="num">1260 k</td>
+      <td class="num">34 %</td>
+      <td class="num">25 %</td>
+      <td class="num">36</td>
+      <td class="num">63 k</td>
+      <td class="num">39.8 %</td>
+      <td class="num"><span class="badge badge-danger">3.5 %</span></td>
+      <td class="num"><span class="badge badge-danger">397d</span></td>
+    </tr><tr>
+      <td><strong>Baleríny</strong></td>
+      <td class="num">384</td>
+      <td class="num">764</td>
+      <td class="num">780 k</td>
+      <td class="num">33 %</td>
+      <td class="num">24 %</td>
+      <td class="num">26</td>
+      <td class="num">39 k</td>
+      <td class="num">36.8 %</td>
+      <td class="num"><span class="badge badge-danger">3.4 %</span></td>
+      <td class="num"><span class="badge badge-danger">411d</span></td>
+    </tr><tr>
+      <td><strong>Nazouváky</strong></td>
+      <td class="num">47</td>
+      <td class="num">680</td>
+      <td class="num">443 k</td>
+      <td class="num">34 %</td>
+      <td class="num">30 %</td>
+      <td class="num">9</td>
+      <td class="num">7 k</td>
+      <td class="num">27.9 %</td>
+      <td class="num"><span class="badge badge-danger">1.3 %</span></td>
+      <td class="num"><span class="badge badge-danger">1058d</span></td>
+    </tr><tr>
+      <td><strong>Obuv do vody</strong></td>
+      <td class="num">84</td>
+      <td class="num">631</td>
+      <td class="num">280 k</td>
+      <td class="num">33 %</td>
+      <td class="num">31 %</td>
+      <td class="num">36</td>
+      <td class="num">18 k</td>
+      <td class="num">42.4 %</td>
+      <td class="num"><span class="badge badge-warning">5.7 %</span></td>
+      <td class="num"><span class="badge badge-danger">245d</span></td>
+    </tr><tr>
+      <td><strong>Domácí obuv</strong></td>
+      <td class="num">37</td>
+      <td class="num">620</td>
+      <td class="num">373 k</td>
+      <td class="num">34 %</td>
+      <td class="num">29 %</td>
+      <td class="num">9</td>
+      <td class="num">7 k</td>
+      <td class="num">27.9 %</td>
+      <td class="num"><span class="badge badge-danger">1.5 %</span></td>
+      <td class="num"><span class="badge badge-danger">964d</span></td>
+    </tr><tr>
+      <td><strong>Plátěnky</strong></td>
+      <td class="num">126</td>
+      <td class="num">478</td>
+      <td class="num">388 k</td>
+      <td class="num">33 %</td>
+      <td class="num">25 %</td>
+      <td class="num">33</td>
+      <td class="num">33 k</td>
+      <td class="num">27.5 %</td>
+      <td class="num"><span class="badge badge-warning">6.9 %</span></td>
+      <td class="num"><span class="badge badge-danger">203d</span></td>
+    </tr><tr>
+      <td><strong>Mokasíny</strong></td>
+      <td class="num">63</td>
+      <td class="num">201</td>
+      <td class="num">265 k</td>
+      <td class="num">34 %</td>
+      <td class="num">23 %</td>
+      <td class="num">2</td>
+      <td class="num">4 k</td>
+      <td class="num">53.0 %</td>
+      <td class="num"><span class="badge badge-danger">1.0 %</span></td>
+      <td class="num"><span class="badge badge-danger">1407d</span></td>
+    </tr><tr>
+      <td><strong>Přezůvky</strong></td>
+      <td class="num">75</td>
+      <td class="num">162</td>
+      <td class="num">72 k</td>
+      <td class="num">34 %</td>
+      <td class="num">23 %</td>
+      <td class="num">6</td>
+      <td class="num">4 k</td>
+      <td class="num">32.0 %</td>
+      <td class="num"><span class="badge badge-danger">3.7 %</span></td>
+      <td class="num"><span class="badge badge-danger">378d</span></td>
+    </tr><tr>
+      <td><strong>První botičky</strong></td>
+      <td class="num">63</td>
+      <td class="num">130</td>
+      <td class="num">101 k</td>
+      <td class="num">31 %</td>
+      <td class="num">22 %</td>
+      <td class="num">6</td>
+      <td class="num">8 k</td>
+      <td class="num">40.7 %</td>
+      <td class="num"><span class="badge badge-danger">4.6 %</span></td>
+      <td class="num"><span class="badge badge-danger">303d</span></td>
+    </tr></tbody>
     </table>
   </div>
-  <p class="fn" style="margin-top:6px;">Sklad = živý stav k 29. 6. 2026 z <code>shoptet_product_variants.stock</code>. Sell-through = prodáno / sklad za 14 dní. Dny do výprodeje = sklad / (prodáno za 14d × 14). Baleríny a Mokasíny jsou kritické — tempo nestačí na vyčištění do konce sezóny.</p>
+  <p class="fn" style="margin-top:6px;">⚠️ Jeden produkt může být ve více kategoriích — řádky se nesčítají. Sklad ze <code>shoptet_product_variants.stock</code> (CZ), prodeje z <code>shoptet_invoice_items</code>. Dny do výprodeje = sklad / (prodáno × 14d tempo). Zobrazeny kategorie s > 20 ks na skladě.</p>
 </div>
-
 <!-- KROK 5: MARŽE -->
 <div class="sec">
   <div class="sec-title">5. Dopad na marži</div>
