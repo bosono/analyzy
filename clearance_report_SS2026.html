@@ -68,13 +68,6 @@ tbody tr:hover{background:var(--sur2);}
 </style>
 </head>
 <body>
-<script>
-(function(){
-  const H='95f9b3352eef79da56e7b38a58e0cf056a839b15cf45963b6595ff52226ad0c6';
-  if(sessionStorage.getItem('bosono_auth')!==H) location.href='login.html?from=clearance_report_SS2026.html';
-})();
-</script>
-
 <div class="hdr">
   <h1>📦 Bosono — Výprodejová kampaň SS2026 — Hodnocení výkonu</h1>
   <div class="sub">Letní doprodej 2026 — prodeje, sklad, marže, doporučení</div>
@@ -121,16 +114,6 @@ tbody tr:hover{background:var(--sur2);}
       <p class="fn" style="margin-top:8px;">Fáze 2 přinesla +21.9 % obratu a +30 % kusů vs. W25, ale průměrná cena klesla nejníže. Revenue/den je stále –33.8 % vs. před-kampaňový průměr (970k/den) — část je sezonní pokles, část je doprovod slevy.</p>
     </div>
   </div>
-  <div class="sql">-- SQL (spuštěno na bosono DB, localhost:5433 → tunelem přes 172.18.0.4:5432)
-SELECT tax_date, COUNT(DISTINCT i.code) invoices, SUM(ii.amount) units,
-    ROUND(SUM(ii.item_price_without_vat_czk)::numeric,0) rev_czk_ex_vat,
-    ROUND(AVG(ii.unit_price_without_vat_czk)::numeric,0) avg_unit_price_czk
-FROM shoptet_invoices i
-JOIN shoptet_invoice_items ii ON ii.invoice_code = i.code
-WHERE i.is_proforma = false AND ii.item_type = 'product'
-  AND tax_date BETWEEN '2026-05-01' AND '2026-06-28'
-GROUP BY tax_date ORDER BY tax_date;
--- Výsledek: 59 řádků, výše tabulkovaných</div>
 </div>
 
 <!-- KPI -->
