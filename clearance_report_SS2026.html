@@ -1634,34 +1634,6 @@ GROUP BY i.site ORDER BY rev_czk DESC;</div>
   </div>
 </div>
 
-<!-- OMEZENÍ -->
-<div class="sec">
-  <div class="sec-title">Předpoklady, omezení a co by analýzu vylepšilo</div>
-  <div class="cgrid2">
-    <div class="cbox">
-      <h3>⚠ Datová omezení</h3>
-      <ul style="list-style:none;font-size:12.5px;color:var(--muted);">
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">❌</span> <strong>Skutečné prodeje per SKU v kampani</strong> — DB byl nedostupný. "Prodeje 8t" z CSV jsou pre-kampaňová data.</li>
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">❌</span> <strong>Míra vratek (Retino)</strong> — bez DB nelze porovnat campaign vs. pre-campaign return rate.</li>
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">❌</span> <strong>Melody POS vs. online split</strong> — melody_sales tabulka nedostupná.</li>
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">❌</span> <strong>CZ vs. SK vs. DE split</strong> — denní data kombinovaná.</li>
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">❌</span> <strong>Živý sklad</strong> — CSV snapshot, ne real-time stav.</li>
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">⚠</span> <strong>WoS je konzervativní odhad</strong> — kampaň by měla tempo zvyšovat vs. pre-kampaňová baseline.</li>
-      </ul>
-    </div>
-    <div class="cbox">
-      <h3>✅ Zdroje dat použité v analýze</h3>
-      <ul style="list-style:none;font-size:12.5px;color:var(--muted);">
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">✅</span> <strong>DB dotaz 1</strong> — denní obrat + kusy + průměrná cena (1/5–28/6, 59 řádků)</li>
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">✅</span> <strong>DB dotaz 2</strong> — schéma tabulek (shoptet_invoices, invoice_items, product_variants, stock_snapshots, retino_tickets, melody_sales)</li>
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">✅</span> <strong>DB dotaz 3</strong> — ceny variant s common_price_czk (vzorek diskontovaných produktů)</li>
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">✅</span> <strong>DB dotaz 4</strong> — transakční ceny 5 vzorkových SKU (2026-04-01 – 2026-06-28)</li>
-        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">✅</span> <strong>CSV analýza</strong> — doprodej_SS2026_SKU.csv (2388 SKU, 6721 ks, kompletní sklad+nákup ceny)</li>
-      </ul>
-      <p style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5;"><strong>Co by analýzu výrazně vylepšilo:</strong> Živá DB data (prodeje per SKU v kampani), Retino míra vratek, Melody POS data, e-mailing send dates pro korelaci se špičkami, konkurenční cenový kontext.</p>
-    </div>
-  </div>
-</div>
 
 </div><!-- /wrap -->
 
