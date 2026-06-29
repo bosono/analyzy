@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bosono — Výprodejová kampaň SS2026 — Analýza</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0f1117;--sur:#1a1d2b;--sur2:#222537;--bord:#2d3149;--tx:#e2e6f0;--muted:#8891a8;--acc:#4f8ef7;--acc2:#7c5cfc;--green:#34d399;--yel:#fbbf24;--red:#f87171;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;background:var(--bg);color:var(--tx);font-size:13.5px;line-height:1.55;}
+.hdr{background:linear-gradient(135deg,#1a1d2b,#0d0f1a);border-bottom:1px solid var(--bord);padding:26px 36px 22px;}
+.hdr h1{font-size:21px;font-weight:700;color:#fff;margin-bottom:4px;}
+.hdr .sub{color:var(--muted);font-size:13px;}
+.meta{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.mtag{background:var(--sur2);border:1px solid var(--bord);border-radius:6px;padding:3px 10px;font-size:11.5px;color:var(--muted);}
+.mtag strong{color:var(--tx);}
+.wrap{max-width:1600px;margin:0 auto;padding:24px 28px;}
+.sec{margin-bottom:30px;}
+.sec-title{font-size:15px;font-weight:600;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--bord);}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:11px;margin-bottom:26px;}
+.kpi{background:var(--sur);border:1px solid var(--bord);border-radius:10px;padding:15px 17px;}
+.kpi .lbl{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+.kpi .val{font-size:21px;font-weight:700;color:#fff;line-height:1.1;}
+.kpi .sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.kpi.warn .val{color:var(--yel);} .kpi.danger .val{color:var(--red);} .kpi.good .val{color:var(--green);} .kpi.acc .val{color:var(--acc);}
+.cbox{background:var(--sur);border:1px solid var(--bord);border-radius:10px;padding:18px;}
+.cbox h3{font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:12px;}
+.cgrid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px;}
+.cgrid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px;}
+.ch{position:relative;height:220px;}
+.twrap{background:var(--sur);border:1px solid var(--bord);border-radius:10px;overflow:hidden;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+thead th{background:var(--sur2);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;padding:9px 11px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--bord);position:sticky;top:0;z-index:1;}
+tbody td{padding:8px 11px;border-bottom:1px solid var(--bord);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:var(--sur2);}
+.nc{max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.num{text-align:right;font-variant-numeric:tabular-nums;}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10.5px;font-weight:600;white-space:nowrap;}
+.badge-danger{background:rgba(248,113,113,.14);color:var(--red);border:1px solid rgba(248,113,113,.22);}
+.badge-warning{background:rgba(251,191,36,.14);color:var(--yel);border:1px solid rgba(251,191,36,.22);}
+.badge-ok{background:rgba(52,211,153,.14);color:var(--green);border:1px solid rgba(52,211,153,.22);}
+.badge-neutral{background:rgba(79,142,247,.12);color:var(--acc);border:1px solid rgba(79,142,247,.2);}
+.rcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:13px;margin-bottom:26px;}
+.rcard{background:var(--sur);border:1px solid var(--bord);border-radius:10px;padding:16px;}
+.rcard.d{border-left:3px solid var(--red);} .rcard.w{border-left:3px solid var(--yel);} .rcard.g{border-left:3px solid var(--green);}
+.rcard .rt{font-size:13px;font-weight:600;color:#fff;margin-bottom:8px;}
+.rcard ul{list-style:none;} .rcard li{color:var(--muted);font-size:12.5px;margin-bottom:5px;padding-left:12px;position:relative;}
+.rcard li::before{content:'→';position:absolute;left:0;color:var(--muted);}
+.alert{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.18);border-radius:8px;padding:11px 15px;margin-bottom:14px;font-size:12.5px;color:var(--muted);}
+.alert strong{color:var(--yel);}
+.info{background:rgba(79,142,247,.06);border:1px solid rgba(79,142,247,.18);border-radius:8px;padding:11px 15px;margin-bottom:14px;font-size:12.5px;color:var(--muted);}
+.info strong{color:var(--acc);}
+.sql{background:#0c0e18;border:1px solid var(--bord);border-radius:7px;padding:12px 14px;font-family:'Fira Code',monospace;font-size:11px;color:#a8b3cf;overflow-x:auto;margin-top:10px;white-space:pre;}
+.fn{font-size:11px;color:var(--muted);margin-top:5px;}
+.ptag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;}
+.pt-pre{background:rgba(79,142,247,.12);color:var(--acc);}
+.pt-mid{background:rgba(251,191,36,.12);color:var(--yel);}
+.pt-full{background:rgba(248,113,113,.12);color:var(--red);}
+.dbar{display:flex;flex-direction:column;gap:7px;}
+.dbar-row{display:flex;align-items:center;gap:8px;font-size:12px;}
+.dbar-lbl{width:65px;text-align:right;color:var(--muted);flex-shrink:0;font-size:11.5px;}
+.dbar-track{flex:1;height:17px;background:var(--sur2);border-radius:3px;overflow:hidden;}
+.dbar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:7px;font-size:10px;color:rgba(255,255,255,.8);font-weight:600;}
+.dbar-cnt{width:90px;color:var(--muted);font-size:11px;}
+@media(max-width:900px){.cgrid,.cgrid2{grid-template-columns:1fr;}.wrap{padding:14px;}}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  const H='95f9b3352eef79da56e7b38a58e0cf056a839b15cf45963b6595ff52226ad0c6';
+  if(sessionStorage.getItem('bosono_auth')!==H) location.href='login.html?from=clearance_report_SS2026.html';
+})();
+</script>
+
+<div class="hdr">
+  <h1>📦 Bosono — Výprodejová kampaň SS2026 — Hodnocení výkonu</h1>
+  <div class="sub">Letní doprodej 2026 — prodeje, sklad, marže, doporučení</div>
+  <div class="meta">
+    <span class="mtag"><strong>Datum analýzy:</strong> 29. 6. 2026</span>
+    <span class="mtag"><strong>Začátek kampaně:</strong> 15. 6. 2026</span>
+    <span class="mtag"><strong>Data:</strong> bosono PostgreSQL DB + doprodej_SS2026_SKU.csv</span>
+    <span class="mtag"><strong>E-shopy:</strong> CZ + SK + DE (kombinovaně)</span>
+    <span class="mtag"><strong>Autor:</strong> Claude Code AI analýza pro Bosono s.r.o.</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ALERT: campaign extended -->
+<div class="alert" style="margin-top:8px;">
+  <strong>⚠ Kampaň překročila plánovaný konec 15/6:</strong> Data ukazují aktivní slevové ceny a zvýšenou aktivitu i po 15/6. Průměrná cena za kus klesla na historicky nejnižší 983 CZK v týdnu 22–28. 6. Kampaň zřejmě nebyla formálně uzavřena nebo byla tiše prodloužena.
+</div>
+
+<div class="info">
+  <strong>ℹ Mechanismus slevy:</strong> Přímé snížení ceny v Shoptet (price_czk &lt; common_price_czk). Binární struktura: 15 % (pozor), 30 % (riziko), 35 % (mrtva). Bez dynamického/automatického cenovacího mechanismu.
+</div>
+
+<!-- KROK 1: WINDOW -->
+<div class="sec">
+  <div class="sec-title">1. Potvrzení okna kampaně — denní data z DB</div>
+  <div class="cgrid">
+    <div class="cbox">
+      <h3>Denní obrat (CZK bez DPH, modrá = před kampaní, žlutá = fáze 1, červená = fáze 2) + Ø cena/ks (fialová)</h3>
+      <div class="ch" style="height:260px;"><canvas id="dailyChart"></canvas></div>
+      <p class="fn">Červená svislá čára = plánovaný konec 15/6. Fáze 2 (červené sloupce, 22–28/6) vykazuje nejnižší průměrné ceny → potvrzení plných 30–35% slev aktivních.</p>
+    </div>
+    <div class="cbox">
+      <h3>Týdenní souhrn</h3>
+      <table>
+        <thead><tr><th>Týden</th><th>Fáze</th><th class="num">Obrat/den</th><th class="num">Ks/den</th><th class="num">Ø cena</th></tr></thead>
+        <tbody>
+          <tr><td>W19–22 (4–31/5)</td><td><span class="ptag pt-pre">Před kampaní</span></td><td class="num">938k</td><td class="num">877</td><td class="num">1 127</td></tr>
+          <tr><td>W23–24 (1–14/6)</td><td><span class="ptag pt-mid">Fáze 1</span></td><td class="num">578k</td><td class="num">557</td><td class="num">1 063</td></tr>
+          <tr><td>W25 (15–21/6)</td><td><span class="ptag pt-mid">Post-plán. konec</span></td><td class="num">527k</td><td class="num">511</td><td class="num">1 055</td></tr>
+          <tr style="background:rgba(248,113,113,.05)"><td>W26 (22–28/6)</td><td><span class="ptag pt-full">Fáze 2 (hlubší)</span></td><td class="num"><strong>642k</strong></td><td class="num"><strong>664</strong></td><td class="num" style="color:var(--red)"><strong>983</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="fn" style="margin-top:8px;">Fáze 2 přinesla +21.9 % obratu a +30 % kusů vs. W25, ale průměrná cena klesla nejníže. Revenue/den je stále –33.8 % vs. před-kampaňový průměr (970k/den) — část je sezonní pokles, část je doprovod slevy.</p>
+    </div>
+  </div>
+  <div class="sql">-- SQL (spuštěno na bosono DB, localhost:5433 → tunelem přes 172.18.0.4:5432)
+SELECT tax_date, COUNT(DISTINCT i.code) invoices, SUM(ii.amount) units,
+    ROUND(SUM(ii.item_price_without_vat_czk)::numeric,0) rev_czk_ex_vat,
+    ROUND(AVG(ii.unit_price_without_vat_czk)::numeric,0) avg_unit_price_czk
+FROM shoptet_invoices i
+JOIN shoptet_invoice_items ii ON ii.invoice_code = i.code
+WHERE i.is_proforma = false AND ii.item_type = 'product'
+  AND tax_date BETWEEN '2026-05-01' AND '2026-06-28'
+GROUP BY tax_date ORDER BY tax_date;
+-- Výsledek: 59 řádků, výše tabulkovaných</div>
+</div>
+
+<!-- KPI -->
+<div class="sec">
+  <div class="sec-title">Klíčové metriky kampaně — stav ke dni analýzy</div>
+  <div class="kpis">
+    <div class="kpi danger"><div class="lbl">Vázaný kapitál</div><div class="val">5,0 M CZK</div><div class="sub">nákupní hodnota skladu v kampani</div></div>
+    <div class="kpi warn"><div class="lbl">Retail hodnota</div><div class="val">10,3 M CZK</div><div class="sub">plná cena × sklad</div></div>
+    <div class="kpi acc"><div class="lbl">Potenciální tržba</div><div class="val">7,1 M CZK</div><div class="sub">slevové ceny × sklad (max scenario)</div></div>
+    <div class="kpi good"><div class="lbl">Potenciální marže</div><div class="val">2,0 M / 28.6 %</div><div class="sub">při plném výprodeji</div></div>
+    <div class="kpi"><div class="lbl">SKU v kampani</div><div class="val">2 388</div><div class="sub">variant kódů ve výprodeji</div></div>
+    <div class="kpi"><div class="lbl">Skladové kusy</div><div class="val">6 721 ks</div><div class="sub">celkem CZ + SK + DE</div></div>
+    <div class="kpi danger"><div class="lbl">„Mrtva" SKU</div><div class="val">1 664 (61 %)</div><div class="sub">žádný pohyb → 35 % sleva doporučena</div></div>
+    <div class="kpi danger"><div class="lbl">SKU bez pohybu (8t)</div><div class="val">1 499 SKU</div><div class="sub">0 prodejů za posledních 8 týdnů</div></div>
+    <div class="kpi warn"><div class="lbl">Průměrný WoS (riziko)</div><div class="val">&gt; 20 týdnů</div><div class="sub">žádné SKU se samo nečistí v 8t</div></div>
+  </div>
+</div>
+
+<!-- KROK 2: CO SE PRODÁVÁ -->
+<div class="sec">
+  <div class="sec-title">2. Co se prodává — analýza podle značky a kategorie</div>
+  <div class="cgrid2">
+    <div class="cbox">
+      <h3>Top 15 značek — vázaný kapitál (tis. CZK) vs. sklad (ks)</h3>
+      <div class="ch" style="height:240px;"><canvas id="brandChart"></canvas></div>
+    </div>
+    <div class="cbox">
+      <h3>Klasifikace skladových kusů</h3>
+      <div class="ch" style="height:240px;"><canvas id="classChart"></canvas></div>
+    </div>
+  </div>
+  
+  <div class="alert"><strong>Poznámka k prodejům 8t:</strong> Sloupec "Prodeje 8t" pochází z CSV plánu doprodeje (pre-kampaňová data). Skutečné prodeje <em>v průběhu kampaně</em> per SKU vyžadují přímý DB přístup (výpadek serveru při analýze). Pre-kampaňový 8t prodej slouží jako baseline pro výpočet WoS.</div>
+
+  <div class="twrap">
+    <table><thead><tr>
+      <th>Značka</th><th class="num">SKU</th><th class="num">Sklad (ks)</th>
+      <th class="num">Nák. hod. (CZK)</th><th class="num">Prodeje 8t</th>
+      <th class="num">% mrtva SKU</th><th class="num">Marže po slevě</th>
+      <th class="num">WoS (odh.)</th>
+    </tr></thead>
+    <tbody><tr>
+      <td class="name-cell"><strong>KOEL</strong></td>
+      <td class="num">270</td>
+      <td class="num">869</td>
+      <td class="num">698,020</td>
+      <td class="num">235</td>
+      <td class="num"><span class="badge badge-warning">60.0%</span></td>
+      <td class="num">35.2%</td>
+      <td class="num"><span class="badge badge-ok">29.6t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Froddo</strong></td>
+      <td class="num">227</td>
+      <td class="num">1,050</td>
+      <td class="num">578,231</td>
+      <td class="num">380</td>
+      <td class="num"><span class="badge badge-warning">50.7%</span></td>
+      <td class="num">30.8%</td>
+      <td class="num"><span class="badge badge-ok">22.1t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Be Lenka</strong></td>
+      <td class="num">159</td>
+      <td class="num">336</td>
+      <td class="num">346,751</td>
+      <td class="num">56</td>
+      <td class="num"><span class="badge badge-danger">78.6%</span></td>
+      <td class="num">29.1%</td>
+      <td class="num"><span class="badge badge-warning">48.0t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Xero shoes</strong></td>
+      <td class="num">113</td>
+      <td class="num">357</td>
+      <td class="num">320,193</td>
+      <td class="num">78</td>
+      <td class="num"><span class="badge badge-warning">68.1%</span></td>
+      <td class="num">28.9%</td>
+      <td class="num"><span class="badge badge-warning">36.6t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>MTNG</strong></td>
+      <td class="num">107</td>
+      <td class="num">426</td>
+      <td class="num">269,207</td>
+      <td class="num">60</td>
+      <td class="num"><span class="badge badge-warning">63.6%</span></td>
+      <td class="num">31.5%</td>
+      <td class="num"><span class="badge badge-warning">56.8t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Fare</strong></td>
+      <td class="num">71</td>
+      <td class="num">337</td>
+      <td class="num">242,380</td>
+      <td class="num">74</td>
+      <td class="num"><span class="badge badge-warning">64.8%</span></td>
+      <td class="num">24.1%</td>
+      <td class="num"><span class="badge badge-warning">36.4t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Baby Bare</strong></td>
+      <td class="num">105</td>
+      <td class="num">295</td>
+      <td class="num">238,666</td>
+      <td class="num">71</td>
+      <td class="num"><span class="badge badge-warning">55.2%</span></td>
+      <td class="num">26.3%</td>
+      <td class="num"><span class="badge badge-warning">33.2t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Shapen</strong></td>
+      <td class="num">114</td>
+      <td class="num">165</td>
+      <td class="num">232,530</td>
+      <td class="num">15</td>
+      <td class="num"><span class="badge badge-danger">87.7%</span></td>
+      <td class="num">22.9%</td>
+      <td class="num"><span class="badge badge-danger">88.0t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Pegres</strong></td>
+      <td class="num">55</td>
+      <td class="num">259</td>
+      <td class="num">145,652</td>
+      <td class="num">83</td>
+      <td class="num"><span class="badge badge-warning">54.5%</span></td>
+      <td class="num">24.4%</td>
+      <td class="num"><span class="badge badge-ok">25.0t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Boskyshoes</strong></td>
+      <td class="num">65</td>
+      <td class="num">145</td>
+      <td class="num">145,013</td>
+      <td class="num">13</td>
+      <td class="num"><span class="badge badge-danger">83.1%</span></td>
+      <td class="num">27.7%</td>
+      <td class="num"><span class="badge badge-danger">89.2t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Tip Toey Joey</strong></td>
+      <td class="num">75</td>
+      <td class="num">198</td>
+      <td class="num">144,369</td>
+      <td class="num">47</td>
+      <td class="num"><span class="badge badge-warning">62.7%</span></td>
+      <td class="num">24.9%</td>
+      <td class="num"><span class="badge badge-warning">33.7t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Ahinsa</strong></td>
+      <td class="num">61</td>
+      <td class="num">112</td>
+      <td class="num">135,201</td>
+      <td class="num">10</td>
+      <td class="num"><span class="badge badge-danger">90.2%</span></td>
+      <td class="num">35.0%</td>
+      <td class="num"><span class="badge badge-danger">89.6t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Camper</strong></td>
+      <td class="num">99</td>
+      <td class="num">155</td>
+      <td class="num">133,576</td>
+      <td class="num">11</td>
+      <td class="num"><span class="badge badge-danger">88.9%</span></td>
+      <td class="num">19.5%</td>
+      <td class="num"><span class="badge badge-danger">112.7t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>OK bare</strong></td>
+      <td class="num">28</td>
+      <td class="num">62</td>
+      <td class="num">77,940</td>
+      <td class="num">1</td>
+      <td class="num"><span class="badge badge-danger">96.4%</span></td>
+      <td class="num">21.4%</td>
+      <td class="num"><span class="badge badge-danger">496.0t</span></td>
+    </tr><tr>
+      <td class="name-cell"><strong>Beda</strong></td>
+      <td class="num">64</td>
+      <td class="num">122</td>
+      <td class="num">77,829</td>
+      <td class="num">7</td>
+      <td class="num"><span class="badge badge-danger">90.6%</span></td>
+      <td class="num">14.4%</td>
+      <td class="num"><span class="badge badge-danger">139.4t</span></td>
+    </tr></tbody>
+    </table>
+  </div>
+  <p class="fn" style="margin-top:6px;">WoS = týdny zásoby při pre-kampaňovém tempu. Tučné jsou kritické hodnoty.</p>
+</div>
+
+<!-- KROK 3: SLEVA -->
+<div class="sec">
+  <div class="sec-title">3. Hloubka slevy — struktura a trend</div>
+  <div class="cgrid2">
+    <div class="cbox">
+      <h3>Distribuce doporučených slev (počet ks na skladě)</h3>
+      <div class="dbar">
+        <div class="dbar-row"><span class="dbar-lbl">15 % off</span><div class="dbar-track"><div class="dbar-fill" style="width:11%;background:#34d399;">737 ks</div></div><span class="dbar-cnt">165 SKU (pozor)</span></div>
+        <div class="dbar-row"><span class="dbar-lbl">30 % off</span><div class="dbar-track"><div class="dbar-fill" style="width:28%;background:#fbbf24;">1 857 ks</div></div><span class="dbar-cnt">554 SKU (riziko)</span></div>
+        <div class="dbar-row"><span class="dbar-lbl">35 % off</span><div class="dbar-track"><div class="dbar-fill" style="width:58%;background:#f87171;">3 913 ks</div></div><span class="dbar-cnt">1 561 SKU (mrtva)</span></div>
+        <div class="dbar-row"><span class="dbar-lbl">ostatní</span><div class="dbar-track"><div class="dbar-fill" style="width:3%;background:#8891a8;">214 ks</div></div><span class="dbar-cnt">108 SKU (smíšené)</span></div>
+      </div>
+      <p class="fn" style="margin-top:10px;">Sleva je <strong>statická</strong> — manuálně nastavena v Shoptetu. Žádný dynamický pricing. WoS = ∞ pro 63 % SKU = bez kampaňového push se nic samo neprodá.</p>
+    </div>
+    <div class="cbox">
+      <h3>Transakční ceny — vzorky z DB (pre vs. kampaň)</h3>
+      <table><thead><tr><th>Varianta</th><th class="num">Pre (CZK)</th><th class="num">Kampaň (CZK)</th><th class="num">Sleva eff.</th></tr></thead>
+      <tbody>
+        <tr><td>Froddo Botaniq 39</td><td class="num">1 238</td><td class="num">855–950</td><td class="num" style="color:var(--red);">23–31 %</td></tr>
+        <tr><td>Froddo Botaniq 38</td><td class="num">1 176</td><td class="num">841–950</td><td class="num" style="color:var(--red);">19–29 %</td></tr>
+        <tr><td>KOEL Ariana 38</td><td class="num">1 611</td><td class="num">1 289</td><td class="num" style="color:var(--yel);">20 %</td></tr>
+        <tr><td>Xero Phoenix 38</td><td class="num">1 744</td><td class="num">1 599</td><td class="num" style="color:var(--yel);">8 %</td></tr>
+      </tbody></table>
+      <p class="fn" style="margin-top:8px;">Transakční slevy jsou nižší než CSV doporučení — část prodejů proběhla za plné nebo částečné ceny před nasazením kampáňových cen. Xero Phoenix (8 % eff.) zřejmě nedostala plnou 30% kampaňovou slevu.</p>
+    </div>
+  </div>
+</div>
+
+<!-- KROK 4: KATEGORIE -->
+<div class="sec">
+  <div class="sec-title">4. Kategoriální breakdown</div>
+  <div class="twrap">
+    <table><thead><tr><th>Kategorie</th><th class="num">SKU</th><th class="num">Sklad (ks)</th><th class="num">Nák. hod.</th><th class="num">Prodeje 8t</th><th class="num">% mrtva</th><th class="num">Podíl skladu</th><th>Komentář</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sandály</strong></td><td class="num">1 390</td><td class="num">3 748</td><td class="num">2 957 972</td><td class="num">845</td><td class="num"><span class="badge badge-danger">67.5 %</span></td><td class="num">55.8 %</td><td>Dominantní blok — největší riziko nevyčištění</td></tr>
+      <tr><td><strong>Barefoot plátěnky</strong></td><td class="num">401</td><td class="num">1 437</td><td class="num">751 215</td><td class="num">445</td><td class="num"><span class="badge badge-warning">63.1 %</span></td><td class="num">21.4 %</td><td>Nejlepší pohyb z velk. kategorií (45 prodejů/8t rel.)</td></tr>
+      <tr><td><strong>Baleríny</strong></td><td class="num">375</td><td class="num">733</td><td class="num">765 429</td><td class="num">103</td><td class="num"><span class="badge badge-danger">82.4 %</span></td><td class="num">10.9 %</td><td>Mimo sezónu, nízký zájem — zvážit přesun do AW kampáně</td></tr>
+      <tr><td><strong>Plátěnky</strong></td><td class="num">117</td><td class="num">466</td><td class="num">375 924</td><td class="num">91</td><td class="num"><span class="badge badge-danger">76.9 %</span></td><td class="num">6.9 %</td><td>Slabý pohyb — extrémní velikosti do outletu</td></tr>
+      <tr><td><strong>Mokasíny</strong></td><td class="num">63</td><td class="num">113</td><td class="num">142 668</td><td class="num">13</td><td class="num"><span class="badge badge-danger">85.7 %</span></td><td class="num">1.7 %</td><td>Mimo sezónu úplně — pouze outlet/bundle</td></tr>
+      <tr><td><strong>Obuv do vody</strong></td><td class="num">42</td><td class="num">224</td><td class="num">40 629</td><td class="num">66</td><td class="num"><span class="badge badge-ok">47.6 %</span></td><td class="num">3.3 %</td><td>✅ Nejlepší výkon — sezóna stále trvá, ponechat</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- KROK 5: MARŽE -->
+<div class="sec">
+  <div class="sec-title">5. Dopad na marži</div>
+  <div class="kpis" style="grid-template-columns:repeat(4,1fr);">
+    <div class="kpi good"><div class="lbl">Marže při plném výprodeji</div><div class="val">28.6 %</div><div class="sub">2 018 049 CZK na 7 051 886 CZK</div></div>
+    <div class="kpi warn"><div class="lbl">Retail marže "obětovaná"</div><div class="val">3,26 M CZK</div><div class="sub">retail − slevová cena × sklad</div></div>
+    <div class="kpi"><div class="lbl">Prům. sleva (vážená ks)</div><div class="val">31.6 %</div><div class="sub">váženo skladovými kusy</div></div>
+    <div class="kpi danger"><div class="lbl">SKU s marží &lt;20 % po slevě</div><div class="val">~380 SKU</div><div class="sub">prahový práh marže</div></div>
+  </div>
+  <div class="cbox">
+    <h3>Marže po slevě (%) dle značky — top 15</h3>
+    <div class="ch" style="height:190px;"><canvas id="marginChart"></canvas></div>
+    <p class="fn" style="margin-top:5px;">Červeně = marže &lt;20 % (Camper 19.5 %, Beda 14.4 %) — hlubší sleva by smazala zisk. Zeleně = nad 25 % (KOEL 35 %, Ahinsa 35 %) — zdravý prostor.</p>
+  </div>
+</div>
+
+<!-- KROK 6: SELL-THROUGH -->
+<div class="sec">
+  <div class="sec-title">6. Sell-through vs. zbývající sklad</div>
+  <div class="kpis" style="grid-template-columns:repeat(4,1fr);">
+    <div class="kpi danger"><div class="lbl">WoS = ∞ (nulové tempo)</div><div class="val">1 499 SKU</div><div class="sub">0 prodejů za 8 týdnů</div></div>
+    <div class="kpi warn"><div class="lbl">WoS &gt; 30 týdnů</div><div class="val">~890 SKU</div><div class="sub">slabé tempo, nestačí na clearance</div></div>
+    <div class="kpi"><div class="lbl">WoS 8–30 týdnů</div><div class="val">~559 SKU</div><div class="sub">pohyb, ale pomalý</div></div>
+    <div class="kpi danger"><div class="lbl">SKU čistící se samo (&lt;8t)</div><div class="val">0 SKU</div><div class="sub">žádné SKU se samo nevyčistí</div></div>
+  </div>
+  <div class="alert"><strong>⚠ Kritické zjištění:</strong> Při pre-kampaňovém tempu se žádné z 2 388 SKU nevyčistí samo v &lt;8 týdnech. Kampaň musí aktivně zvyšovat tempo — nebo je nutný přesun do outletu/fyzického prodeje / B2B výprodej.</div>
+</div>
+
+<!-- KROK 7–9: VELIKOST, KANÁLY, DOW -->
+<div class="sec">
+  <div class="sec-title">7–9. Velikostní křivka, kanály, denní vzorce</div>
+  <div class="cgrid2">
+    <div class="cbox">
+      <h3>Den v týdnu — průměrný denní obrat (z DB dat 1/5–28/6)</h3>
+      <div class="ch" style="height:190px;"><canvas id="dowChart"></canvas></div>
+      <p class="fn" style="margin-top:5px;"><strong>Doporučení pro timing komunikace:</strong> Pondělí a úterý jsou nejsilnější dny (+20–35 % nad průměrem). Sobota a neděle jsou nejslabší. → E-mailing/push odesílat v <strong>neděli večer nebo pondělí ráno</strong>.</p>
+    </div>
+    <div class="cbox">
+      <h3>Kanály a velikostní křivka — observace</h3>
+      <p style="color:var(--muted);font-size:12.5px;line-height:1.65;">
+        <strong>Velikostní křivka (z CSV):</strong> Extrémní velikosti (24–25 dětská, 47–48 pánská) dominují kategorii "mrtva" (dni_od_prodeje = 999). Středové velikosti (38–40 dámská, 32–35 dětská) mají pohyb v kategorii "riziko". <em>Flat slevová hloubka nefunguje pro extrémní velikosti</em> — potřebují 40–50 % nebo outlet bundle.<br><br>
+        <strong>Kanálová analýza (SQL připraveno, DB byl nedostupný):</strong>
+      </p>
+      <div class="sql">SELECT 
+  i.site, SUM(ii.amount) ks,
+  ROUND(SUM(ii.item_price_without_vat_czk),0) rev_czk
+FROM shoptet_invoice_items ii
+JOIN shoptet_invoices i ON i.code=ii.invoice_code
+WHERE is_proforma=false AND item_type='product'
+  AND tax_date >= '2026-06-22'
+GROUP BY i.site ORDER BY rev_czk DESC;</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT TABLE -->
+<div class="sec">
+  <div class="sec-title">Top 60 produktů — variant-level přehled dle vázaného kapitálu</div>
+  <div class="twrap" style="max-height:580px;overflow-y:auto;">
+    <table>
+      <thead><tr>
+        <th>Produkt</th><th>Značka</th><th>Kat.</th>
+        <th class="num">SKU</th><th class="num">Sklad</th><th class="num">Prodej 8t</th>
+        <th class="num">Sleva</th><th class="num">Max</th><th class="num">Stav</th>
+        <th class="num">WoS</th><th class="num">Nák.hod.</th><th class="num">Pot.tržba</th>
+        <th class="num">Marže</th><th>Doporučení</th>
+      </tr></thead>
+      <tbody><tr>
+      <td class="name-cell" title="Barefoot plátěnky Froddo - Canvas Blue+ tmavě modré">Barefoot plátěnky Froddo - Canvas Blue+ tmavě modré</td>
+      <td>Froddo</td><td>Barefoot plátěnky</td>
+      <td class="num">13</td><td class="num">140</td><td class="num">59</td>
+      <td class="num">35%</td><td class="num">45%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-ok">19t</span></td>
+      <td class="num">69,519</td><td class="num">100,647</td>
+      <td class="num">30.9%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Remi PU Fabrics  DK Grey šedé">Barefoot sandály Koel - Remi PU Fabrics  DK Grey šedé</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">15</td><td class="num">73</td><td class="num">13</td>
+      <td class="num">35%</td><td class="num">52%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">45t</span></td>
+      <td class="num">62,462</td><td class="num">90,761</td>
+      <td class="num">31.2%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Froddo -  Botaniq laces Black černé">Barefoot plátěnky Froddo -  Botaniq laces Black černé</td>
+      <td>Froddo</td><td>Plátěnky</td>
+      <td class="num">6</td><td class="num">84</td><td class="num">28</td>
+      <td class="num">35%</td><td class="num">44%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-warning">24t</span></td>
+      <td class="num">56,784</td><td class="num">79,695</td>
+      <td class="num">28.7%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Froddo - Canvas fuchsiové">Barefoot plátěnky Froddo - Canvas fuchsiové</td>
+      <td>Froddo</td><td>Barefoot plátěnky</td>
+      <td class="num">12</td><td class="num">106</td><td class="num">50</td>
+      <td class="num">35%</td><td class="num">43%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-ok">17t</span></td>
+      <td class="num">52,903</td><td class="num">78,010</td>
+      <td class="num">32.2%</td>
+      <td><span class="badge badge-neutral">Sledovat</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Remi PU Fabrics fuchsiové">Barefoot sandály Koel - Remi PU Fabrics fuchsiové</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">13</td><td class="num">52</td><td class="num">16</td>
+      <td class="num">35%</td><td class="num">47%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">26t</span></td>
+      <td class="num">44,667</td><td class="num">67,702</td>
+      <td class="num">34.0%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěné tenisky Pegres - BF57U černé vegan">Barefoot plátěné tenisky Pegres - BF57U černé vegan</td>
+      <td>Pegres</td><td>Barefoot plátěnky</td>
+      <td class="num">12</td><td class="num">78</td><td class="num">28</td>
+      <td class="num">35%</td><td class="num">42%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">22t</span></td>
+      <td class="num">44,038</td><td class="num">58,897</td>
+      <td class="num">25.2%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Froddo - Canvas Dark blue tmavě modré">Barefoot plátěnky Froddo - Canvas Dark blue tmavě modré</td>
+      <td>Froddo</td><td>Barefoot plátěnky</td>
+      <td class="num">8</td><td class="num">86</td><td class="num">46</td>
+      <td class="num">35%</td><td class="num">47%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-ok">15t</span></td>
+      <td class="num">41,316</td><td class="num">64,165</td>
+      <td class="num">35.6%</td>
+      <td><span class="badge badge-neutral">Sledovat</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Fare Bare - B5712114 Sicilky černé">Barefoot plátěnky Fare Bare - B5712114 Sicilky černé</td>
+      <td>Fare</td><td>Plátěnky</td>
+      <td class="num">9</td><td class="num">53</td><td class="num">9</td>
+      <td class="num">35%</td><td class="num">44%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">47t</span></td>
+      <td class="num">40,005</td><td class="num">50,743</td>
+      <td class="num">21.2%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály MTNG - Free Care Off White bílé">Barefoot sandály MTNG - Free Care Off White bílé</td>
+      <td>MTNG</td><td>Sandály</td>
+      <td class="num">10</td><td class="num">68</td><td class="num">1</td>
+      <td class="num">35%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">544t</span></td>
+      <td class="num">39,916</td><td class="num">54,332</td>
+      <td class="num">26.5%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dětské sandály Baby Bare - Febo summer petrol zelené">Barefoot dětské sandály Baby Bare - Febo summer petrol zelené</td>
+      <td>Baby Bare</td><td>Sandály</td>
+      <td class="num">12</td><td class="num">47</td><td class="num">4</td>
+      <td class="num">35%</td><td class="num">48%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">94t</span></td>
+      <td class="num">37,176</td><td class="num">50,445</td>
+      <td class="num">26.3%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Fare Bare - B5711482 vegan béžové">Barefoot plátěnky Fare Bare - B5711482 vegan béžové</td>
+      <td>Fare</td><td>Plátěnky</td>
+      <td class="num">6</td><td class="num">52</td><td class="num">8</td>
+      <td class="num">35%</td><td class="num">47%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">52t</span></td>
+      <td class="num">36,733</td><td class="num">49,422</td>
+      <td class="num">25.7%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské sandály Koel - Ariana Metalic Champagne béžové">Barefoot dámské sandály Koel - Ariana Metalic Champagne béžové</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">6</td><td class="num">42</td><td class="num">9</td>
+      <td class="num">35%</td><td class="num">54%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">37t</span></td>
+      <td class="num">35,700</td><td class="num">54,420</td>
+      <td class="num">34.4%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěné tenisky Pegres - BF57U růžové vegan">Barefoot plátěné tenisky Pegres - BF57U růžové vegan</td>
+      <td>Pegres</td><td>Barefoot plátěnky</td>
+      <td class="num">12</td><td class="num">61</td><td class="num">22</td>
+      <td class="num">35%</td><td class="num">43%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">22t</span></td>
+      <td class="num">34,651</td><td class="num">47,411</td>
+      <td class="num">26.9%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály MTNG - Free Care Black černé">Barefoot sandály MTNG - Free Care Black černé</td>
+      <td>MTNG</td><td>Sandály</td>
+      <td class="num">8</td><td class="num">59</td><td class="num">4</td>
+      <td class="num">35%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">118t</span></td>
+      <td class="num">34,633</td><td class="num">47,967</td>
+      <td class="num">27.8%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Fare Bare - B5711491 vínové">Barefoot plátěnky Fare Bare - B5711491 vínové</td>
+      <td>Fare</td><td>Plátěnky</td>
+      <td class="num">7</td><td class="num">49</td><td class="num">3</td>
+      <td class="num">35%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">131t</span></td>
+      <td class="num">34,517</td><td class="num">46,158</td>
+      <td class="num">25.2%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Froddo - Canvas Blue/denim modré">Barefoot plátěnky Froddo - Canvas Blue/denim modré</td>
+      <td>Froddo</td><td>Barefoot plátěnky</td>
+      <td class="num">14</td><td class="num">71</td><td class="num">26</td>
+      <td class="num">35%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-warning">22t</span></td>
+      <td class="num">33,495</td><td class="num">47,333</td>
+      <td class="num">29.2%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěné tenisky Pegres - BF57U mint vegan mintové">Barefoot plátěné tenisky Pegres - BF57U mint vegan mintové</td>
+      <td>Pegres</td><td>Barefoot plátěnky</td>
+      <td class="num">9</td><td class="num">56</td><td class="num">17</td>
+      <td class="num">35%</td><td class="num">43%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">26t</span></td>
+      <td class="num">31,430</td><td class="num">41,152</td>
+      <td class="num">23.6%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Boskyshoes - Performance Z-tech black orange černé">Barefoot sandály Boskyshoes - Performance Z-tech black orange </td>
+      <td>Boskyshoes</td><td>Sandály</td>
+      <td class="num">9</td><td class="num">28</td><td class="num">1</td>
+      <td class="num">35%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">224t</span></td>
+      <td class="num">31,192</td><td class="num">42,078</td>
+      <td class="num">25.9%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot baleríny Ahinsa - Softy pletené béžové">Barefoot baleríny Ahinsa - Softy pletené béžové</td>
+      <td>Ahinsa</td><td>Baleríny</td>
+      <td class="num">5</td><td class="num">21</td><td class="num">4</td>
+      <td class="num">35%</td><td class="num">53%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">42t</span></td>
+      <td class="num">26,460</td><td class="num">41,022</td>
+      <td class="num">35.5%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály MTNG - Free Care Kaky zelené">Barefoot sandály MTNG - Free Care Kaky zelené</td>
+      <td>MTNG</td><td>Sandály</td>
+      <td class="num">9</td><td class="num">45</td><td class="num">0</td>
+      <td class="num">35%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">∞t</span></td>
+      <td class="num">26,415</td><td class="num">35,955</td>
+      <td class="num">26.5%</td>
+      <td><span class="badge badge-danger">OUTLET</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Abriana Metalic Gold zlaté">Barefoot sandály Koel - Abriana Metalic Gold zlaté</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">7</td><td class="num">35</td><td class="num">18</td>
+      <td class="num">35%</td><td class="num">53%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-ok">16t</span></td>
+      <td class="num">26,190</td><td class="num">44,536</td>
+      <td class="num">41.2%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Abriana Fantasy fuchsiové">Barefoot sandály Koel - Abriana Fantasy fuchsiové</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">11</td><td class="num">36</td><td class="num">4</td>
+      <td class="num">35%</td><td class="num">53%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">72t</span></td>
+      <td class="num">26,146</td><td class="num">39,608</td>
+      <td class="num">34.0%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dětské plátěnky Baby Bare - Febo Nova navy modré">Barefoot dětské plátěnky Baby Bare - Febo Nova navy modré</td>
+      <td>Baby Bare</td><td>Barefoot plátěnky</td>
+      <td class="num">6</td><td class="num">31</td><td class="num">15</td>
+      <td class="num">32%</td><td class="num">32%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-ok">17t</span></td>
+      <td class="num">26,127</td><td class="num">32,970</td>
+      <td class="num">20.8%</td>
+      <td><span class="badge badge-neutral">Sledovat</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Remi PU Fabrics Royal blue modré">Barefoot sandály Koel - Remi PU Fabrics Royal blue modré</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">8</td><td class="num">30</td><td class="num">13</td>
+      <td class="num">35%</td><td class="num">52%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-ok">18t</span></td>
+      <td class="num">25,916</td><td class="num">41,573</td>
+      <td class="num">37.7%</td>
+      <td><span class="badge badge-neutral">Sledovat</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské sandály Xero shoes - D-Trail Irish Cream/Lake Blue béžové">Barefoot dámské sandály Xero shoes - D-Trail Irish Cream/Lake </td>
+      <td>Xero shoes</td><td>Sandály</td>
+      <td class="num">6</td><td class="num">26</td><td class="num">2</td>
+      <td class="num">35%</td><td class="num">51%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">104t</span></td>
+      <td class="num">25,844</td><td class="num">36,883</td>
+      <td class="num">29.9%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Froddo - Canvas Blue modrý fotbal">Barefoot plátěnky Froddo - Canvas Blue modrý fotbal</td>
+      <td>Froddo</td><td>Barefoot plátěnky</td>
+      <td class="num">10</td><td class="num">54</td><td class="num">19</td>
+      <td class="num">35%</td><td class="num">48%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">23t</span></td>
+      <td class="num">25,688</td><td class="num">36,609</td>
+      <td class="num">29.8%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Madison Dark grey šedé">Barefoot sandály Koel - Madison Dark grey šedé</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">5</td><td class="num">31</td><td class="num">22</td>
+      <td class="num">30%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-ok">pozor</span></td>
+      <td class="num"><span class="badge badge-ok">11t</span></td>
+      <td class="num">25,390</td><td class="num">47,169</td>
+      <td class="num">46.2%</td>
+      <td><span class="badge badge-ok">Ponechat</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefootové sandály Ahinsa - hnědé">Barefootové sandály Ahinsa - hnědé</td>
+      <td>Ahinsa</td><td>Sandály</td>
+      <td class="num">10</td><td class="num">22</td><td class="num">0</td>
+      <td class="num">35%</td><td class="num">56%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">∞t</span></td>
+      <td class="num">25,366</td><td class="num">39,908</td>
+      <td class="num">36.4%</td>
+      <td><span class="badge badge-danger">OUTLET</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot tenisky Peerko - Origin Denim modré">Barefoot tenisky Peerko - Origin Denim modré</td>
+      <td>Peerko</td><td>Plátěnky</td>
+      <td class="num">8</td><td class="num">20</td><td class="num">1</td>
+      <td class="num">35%</td><td class="num">45%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">160t</span></td>
+      <td class="num">25,324</td><td class="num">30,785</td>
+      <td class="num">17.7%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské sandály MTNG - Free Care Pink růžové">Barefoot dámské sandály MTNG - Free Care Pink růžové</td>
+      <td>MTNG</td><td>Sandály</td>
+      <td class="num">6</td><td class="num">43</td><td class="num">6</td>
+      <td class="num">35%</td><td class="num">51%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">57t</span></td>
+      <td class="num">25,241</td><td class="num">35,968</td>
+      <td class="num">29.8%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot baleríny Froddo - Mary J Dark blue tmavě modré">Barefoot baleríny Froddo - Mary J Dark blue tmavě modré</td>
+      <td>Froddo</td><td>Baleríny</td>
+      <td class="num">7</td><td class="num">32</td><td class="num">4</td>
+      <td class="num">35%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">64t</span></td>
+      <td class="num">24,704</td><td class="num">33,721</td>
+      <td class="num">26.7%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Boskyshoes - Performance Z-tech natural rubber černé">Barefoot sandály Boskyshoes - Performance Z-tech natural rubbe</td>
+      <td>Boskyshoes</td><td>Sandály</td>
+      <td class="num">7</td><td class="num">21</td><td class="num">2</td>
+      <td class="num">35%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">84t</span></td>
+      <td class="num">24,360</td><td class="num">32,394</td>
+      <td class="num">24.8%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Abriana Fantasy Old pink růžové">Barefoot sandály Koel - Abriana Fantasy Old pink růžové</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">9</td><td class="num">32</td><td class="num">5</td>
+      <td class="num">35%</td><td class="num">53%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">51t</span></td>
+      <td class="num">23,784</td><td class="num">35,474</td>
+      <td class="num">33.0%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Froddo - Canvas Fuxia+ fuchsiové">Barefoot plátěnky Froddo - Canvas Fuxia+ fuchsiové</td>
+      <td>Froddo</td><td>Barefoot plátěnky</td>
+      <td class="num">10</td><td class="num">49</td><td class="num">17</td>
+      <td class="num">35%</td><td class="num">48%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">23t</span></td>
+      <td class="num">22,675</td><td class="num">32,506</td>
+      <td class="num">30.2%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Abriana Fantasy Jeans modré">Barefoot sandály Koel - Abriana Fantasy Jeans modré</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">7</td><td class="num">30</td><td class="num">7</td>
+      <td class="num">35%</td><td class="num">53%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">34t</span></td>
+      <td class="num">22,603</td><td class="num">34,066</td>
+      <td class="num">33.6%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Fare Bare - A5312452 Sicilky růžové">Barefoot plátěnky Fare Bare - A5312452 Sicilky růžové</td>
+      <td>Fare</td><td>Plátěnky</td>
+      <td class="num">6</td><td class="num">30</td><td class="num">6</td>
+      <td class="num">35%</td><td class="num">44%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">40t</span></td>
+      <td class="num">22,535</td><td class="num">28,481</td>
+      <td class="num">20.9%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot baleríny Be Lenka - Bellissima 3.0 Burgundy vínové">Barefoot baleríny Be Lenka - Bellissima 3.0 Burgundy vínové</td>
+      <td>Be Lenka</td><td>Baleríny</td>
+      <td class="num">7</td><td class="num">15</td><td class="num">1</td>
+      <td class="num">35%</td><td class="num">46%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">120t</span></td>
+      <td class="num">22,125</td><td class="num">28,607</td>
+      <td class="num">22.7%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské sandály Be Lenka - Promenade 2.0 černé">Barefoot dámské sandály Be Lenka - Promenade 2.0 černé</td>
+      <td>Be Lenka</td><td>Sandály</td>
+      <td class="num">8</td><td class="num">26</td><td class="num">1</td>
+      <td class="num">35%</td><td class="num">55%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">208t</span></td>
+      <td class="num">22,100</td><td class="num">33,644</td>
+      <td class="num">34.3%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské sandály Be Lenka - Promenade 2.0 béžové">Barefoot dámské sandály Be Lenka - Promenade 2.0 béžové</td>
+      <td>Be Lenka</td><td>Sandály</td>
+      <td class="num">8</td><td class="num">26</td><td class="num">2</td>
+      <td class="num">35%</td><td class="num">55%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">104t</span></td>
+      <td class="num">22,100</td><td class="num">34,040</td>
+      <td class="num">35.1%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dětské plátěnky Pegres - BF57U gaming černé vegan">Barefoot dětské plátěnky Pegres - BF57U gaming černé vegan</td>
+      <td>Pegres</td><td>Barefoot plátěnky</td>
+      <td class="num">11</td><td class="num">39</td><td class="num">9</td>
+      <td class="num">35%</td><td class="num">45%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">35t</span></td>
+      <td class="num">21,816</td><td class="num">27,414</td>
+      <td class="num">20.4%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Shapen - Twiggy N Black/White černé">Barefoot sandály Shapen - Twiggy N Black/White černé</td>
+      <td>Shapen</td><td>Sandály</td>
+      <td class="num">7</td><td class="num">14</td><td class="num">0</td>
+      <td class="num">35%</td><td class="num">43%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">∞t</span></td>
+      <td class="num">21,784</td><td class="num">26,502</td>
+      <td class="num">17.8%</td>
+      <td><span class="badge badge-danger">OUTLET</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Froddo - Canvas T-bar Gold shine zlaté">Barefoot plátěnky Froddo - Canvas T-bar Gold shine zlaté</td>
+      <td>Froddo</td><td>Barefoot plátěnky</td>
+      <td class="num">17</td><td class="num">48</td><td class="num">10</td>
+      <td class="num">35%</td><td class="num">50%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">38t</span></td>
+      <td class="num">21,676</td><td class="num">30,278</td>
+      <td class="num">28.4%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Abriana fantasy Nude barevné">Barefoot sandály Koel - Abriana fantasy Nude barevné</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">10</td><td class="num">29</td><td class="num">3</td>
+      <td class="num">35%</td><td class="num">53%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">77t</span></td>
+      <td class="num">21,519</td><td class="num">32,059</td>
+      <td class="num">32.9%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dětské sandály Baby Bare - Febo summer khaki zelené">Barefoot dětské sandály Baby Bare - Febo summer khaki zelené</td>
+      <td>Baby Bare</td><td>Sandály</td>
+      <td class="num">12</td><td class="num">27</td><td class="num">3</td>
+      <td class="num">35%</td><td class="num">48%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">72t</span></td>
+      <td class="num">21,336</td><td class="num">28,817</td>
+      <td class="num">26.0%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Ashley Fantasy Jeans modré">Barefoot sandály Koel - Ashley Fantasy Jeans modré</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">8</td><td class="num">29</td><td class="num">2</td>
+      <td class="num">35%</td><td class="num">50%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">116t</span></td>
+      <td class="num">21,096</td><td class="num">29,338</td>
+      <td class="num">28.1%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dětské sandály Koel - Deen Fantasy fuchsiové">Barefoot dětské sandály Koel - Deen Fantasy fuchsiové</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">7</td><td class="num">24</td><td class="num">1</td>
+      <td class="num">35%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">192t</span></td>
+      <td class="num">21,090</td><td class="num">28,320</td>
+      <td class="num">25.5%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské sandály Shapen - Twiggy N Beige/Brown béžové">Barefoot dámské sandály Shapen - Twiggy N Beige/Brown béžové</td>
+      <td>Shapen</td><td>Sandály</td>
+      <td class="num">6</td><td class="num">13</td><td class="num">2</td>
+      <td class="num">35%</td><td class="num">43%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">52t</span></td>
+      <td class="num">20,228</td><td class="num">25,415</td>
+      <td class="num">20.4%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Boskyshoes - Enduro 2.0 Y Medium černé">Barefoot sandály Boskyshoes - Enduro 2.0 Y Medium černé</td>
+      <td>Boskyshoes</td><td>Sandály</td>
+      <td class="num">8</td><td class="num">22</td><td class="num">0</td>
+      <td class="num">35%</td><td class="num">51%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">∞t</span></td>
+      <td class="num">19,998</td><td class="num">28,292</td>
+      <td class="num">29.3%</td>
+      <td><span class="badge badge-danger">OUTLET</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské sandály Xero shoes - Z-Trail EV Fuchsia Purple fuchsiové">Barefoot dámské sandály Xero shoes - Z-Trail EV Fuchsia Purple</td>
+      <td>Xero shoes</td><td>Sandály</td>
+      <td class="num">5</td><td class="num">19</td><td class="num">3</td>
+      <td class="num">35%</td><td class="num">50%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">51t</span></td>
+      <td class="num">19,950</td><td class="num">28,246</td>
+      <td class="num">29.4%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Natural barefoot - Fany Salt hnědé">Barefoot sandály Natural barefoot - Fany Salt hnědé</td>
+      <td>Natural barefoot</td><td>Sandály</td>
+      <td class="num">7</td><td class="num">26</td><td class="num">0</td>
+      <td class="num">35%</td><td class="num">54%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">∞t</span></td>
+      <td class="num">19,916</td><td class="num">29,429</td>
+      <td class="num">32.3%</td>
+      <td><span class="badge badge-danger">OUTLET</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot plátěnky Froddo - Canvas Gold shine zlaté">Barefoot plátěnky Froddo - Canvas Gold shine zlaté</td>
+      <td>Froddo</td><td>Barefoot plátěnky</td>
+      <td class="num">8</td><td class="num">41</td><td class="num">18</td>
+      <td class="num">35%</td><td class="num">46%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-ok">18t</span></td>
+      <td class="num">19,655</td><td class="num">28,883</td>
+      <td class="num">31.9%</td>
+      <td><span class="badge badge-neutral">Sledovat</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dětské sandály Jonap - Daisy skořicové">Barefoot dětské sandály Jonap - Daisy skořicové</td>
+      <td>Jonap</td><td>Sandály</td>
+      <td class="num">7</td><td class="num">30</td><td class="num">8</td>
+      <td class="num">35%</td><td class="num">50%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">30t</span></td>
+      <td class="num">19,635</td><td class="num">28,331</td>
+      <td class="num">30.7%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dětské sandály Protetika - Dizy pink růžové">Barefoot dětské sandály Protetika - Dizy pink růžové</td>
+      <td>Protetika</td><td>Sandály</td>
+      <td class="num">4</td><td class="num">29</td><td class="num">10</td>
+      <td class="num">35%</td><td class="num">36%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-warning">23t</span></td>
+      <td class="num">19,604</td><td class="num">24,391</td>
+      <td class="num">19.6%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dětské plátěnky Baby Bare - Febo Nova pink růžové">Barefoot dětské plátěnky Baby Bare - Febo Nova pink růžové</td>
+      <td>Baby Bare</td><td>Barefoot plátěnky</td>
+      <td class="num">6</td><td class="num">23</td><td class="num">13</td>
+      <td class="num">32%</td><td class="num">32%</td>
+      <td class="num"><span class="badge badge-ok">pozor</span></td>
+      <td class="num"><span class="badge badge-ok">14t</span></td>
+      <td class="num">19,481</td><td class="num">26,242</td>
+      <td class="num">25.8%</td>
+      <td><span class="badge badge-ok">Ponechat</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské baleríny OK bare - Noe černé">Barefoot dámské baleríny OK bare - Noe černé</td>
+      <td>OK bare</td><td>Baleríny</td>
+      <td class="num">6</td><td class="num">15</td><td class="num">0</td>
+      <td class="num">35%</td><td class="num">45%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-danger">∞t</span></td>
+      <td class="num">19,350</td><td class="num">24,150</td>
+      <td class="num">19.9%</td>
+      <td><span class="badge badge-danger">OUTLET</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské sandály Koel - Ariata Napa black černé">Barefoot dámské sandály Koel - Ariata Napa black černé</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">6</td><td class="num">24</td><td class="num">9</td>
+      <td class="num">35%</td><td class="num">55%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">21t</span></td>
+      <td class="num">19,248</td><td class="num">32,593</td>
+      <td class="num">40.9%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské sandály Xero shoes - Z-trek W porcelain blue modré">Barefoot dámské sandály Xero shoes - Z-trek W porcelain blue m</td>
+      <td>Xero shoes</td><td>Sandály</td>
+      <td class="num">5</td><td class="num">23</td><td class="num">6</td>
+      <td class="num">35%</td><td class="num">45%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-warning">31t</span></td>
+      <td class="num">19,067</td><td class="num">25,421</td>
+      <td class="num">25.0%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot baleríny Ahinsa - Softy pletené černé">Barefoot baleríny Ahinsa - Softy pletené černé</td>
+      <td>Ahinsa</td><td>Baleríny</td>
+      <td class="num">5</td><td class="num">15</td><td class="num">4</td>
+      <td class="num">35%</td><td class="num">47%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-warning">30t</span></td>
+      <td class="num">18,900</td><td class="num">28,055</td>
+      <td class="num">32.6%</td>
+      <td><span class="badge badge-warning">Zvýšit slevu</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot dámské sandály Xero shoes - D-Trail Black/Asphalt černé">Barefoot dámské sandály Xero shoes - D-Trail Black/Asphalt čer</td>
+      <td>Xero shoes</td><td>Sandály</td>
+      <td class="num">6</td><td class="num">19</td><td class="num">9</td>
+      <td class="num">35%</td><td class="num">45%</td>
+      <td class="num"><span class="badge badge-warning">riziko</span></td>
+      <td class="num"><span class="badge badge-ok">17t</span></td>
+      <td class="num">18,886</td><td class="num">26,277</td>
+      <td class="num">28.1%</td>
+      <td><span class="badge badge-neutral">Sledovat</span></td>
+    </tr><tr>
+      <td class="name-cell" title="Barefoot sandály Koel - Madison Wine vínové">Barefoot sandály Koel - Madison Wine vínové</td>
+      <td>KOEL</td><td>Sandály</td>
+      <td class="num">7</td><td class="num">23</td><td class="num">6</td>
+      <td class="num">35%</td><td class="num">49%</td>
+      <td class="num"><span class="badge badge-danger">mrtva</span></td>
+      <td class="num"><span class="badge badge-warning">31t</span></td>
+      <td class="num">18,590</td><td class="num">28,890</td>
+      <td class="num">35.7%</td>
+      <td><span class="badge badge-danger">Prohloubit slevu</span></td>
+    </tr></tbody>
+    </table>
+  </div>
+  <p class="fn" style="margin-top:5px;">WoS = sklad ÷ (prodej 8t ÷ 8 týdnů). Max = doporučená maximální sleva dle marže floor. Pot. tržba = sklad × doporučená slevová cena.</p>
+</div>
+
+
+
+<!-- VELOCITY + REAL SALES -->
+<div class="sec" id="velocity">
+  <div class="sec-title">📈 Prodejní tempo kampaně — pre vs. kampaň (DB data)</div>
+
+  <div class="alert" style="margin-bottom:12px;">
+    <strong>🔴 Kritické:</strong> Největší dvě položky skladu (Froddo + KOEL) se v kampani prodávají <strong>pomaleji</strong> než před kampaní.
+    Froddo –37 %, KOEL –16 %. Naproti tomu Xero shoes +166 %, Keen +309 %, Muris +176 % — pro tyto značky kampaň funguje výborně.
+  </div>
+
+  <div class="rcards" style="margin-bottom:16px;">
+    <div class="rcard d">
+      <div class="rt">🔴 Nefunguje — kampaň nezrychlila prodej</div>
+      <ul>
+        <li><strong>Froddo</strong>: 6,8 ks/den kampaň vs. 10,7 ks/den pre → –37 % | 1 093 ks zbývá → 161 dní</li>
+        <li><strong>Tip Toey Joey</strong>: 1,1 vs. 2,1 ks/den → –45 % | return rate 68,8 % (!)</li>
+        <li><strong>Fare</strong>: 1,6 vs. 1,9 ks/den → –19 % | 339 ks zbývá → 216 dní</li>
+        <li><strong>Be Lenka</strong>: 1,1 vs. 1,1 ks/den → –5 % | 348 ks zbývá → <strong>325 dní</strong> (!)</li>
+        <li><strong>MTNG</strong>: prakticky beze změny | 452 ks zbývá → 452 dní — nutná hlubší sleva</li>
+      </ul>
+    </div>
+    <div class="rcard g">
+      <div class="rt">🟢 Funguje — kampaň výrazně zrychlila prodej</div>
+      <ul>
+        <li><strong>Keen</strong>: +309 % (0,2 → 1,0 ks/den) | zbývá 64 ks → čistí se za 64 dní</li>
+        <li><strong>Xero shoes</strong>: +166 % (1,2 → 3,1 ks/den) | zbývá 360 ks → 117 dní</li>
+        <li><strong>Muris</strong>: +176 % (0,3 → 0,9 ks/den)</li>
+        <li><strong>Saguaro</strong>: +99 %, <strong>D.D.step</strong>: +61 %, <strong>Baby Bare</strong>: +56 %</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cbox" style="margin-bottom:16px;">
+    <h3>Denní tempo prodeje — pre-kampaň vs. kampaň (top 12 značek)</h3>
+    <div class="ch" style="height:200px;"><canvas id="velChart"></canvas></div>
+  </div>
+
+  <div class="twrap">
+    <table>
+      <thead><tr>
+        <th>Značka</th>
+        <th class="num">Prodáno pre (45d)</th>
+        <th class="num">Prodáno kampaň (14d)</th>
+        <th class="num">Ks/den pre</th>
+        <th class="num">Ks/den kampaň</th>
+        <th class="num">Lift</th>
+        <th class="num">Obrat kampaň (Kč)</th>
+        <th class="num">Marže %</th>
+        <th class="num">Živý sklad CZ</th>
+        <th class="num">Dny do výprodeje</th>
+        <th class="num">Retino rate (kampan)</th>
+      </tr></thead>
+      <tbody><tr>
+      <td class="nc"><strong>KOEL</strong></td>
+      <td class="num">342</td>
+      <td class="num">89</td>
+      <td class="num">7.6</td>
+      <td class="num">6.4</td>
+      <td class="num"><span class="badge badge-danger">↓ -16%</span></td>
+      <td class="num">127,695</td>
+      <td class="num">41.7%</td>
+      <td class="num">903</td>
+      <td class="num"><span class="badge badge-danger">142d</span></td>
+      <td class="num">38% <small style="color:#6b7280">(-9pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Froddo</strong></td>
+      <td class="num">482</td>
+      <td class="num">95</td>
+      <td class="num">10.7</td>
+      <td class="num">6.8</td>
+      <td class="num"><span class="badge badge-danger">↓ -37%</span></td>
+      <td class="num">84,968</td>
+      <td class="num">31.2%</td>
+      <td class="num">1093</td>
+      <td class="num"><span class="badge badge-danger">161d</span></td>
+      <td class="num">35% <small style="color:#6b7280">(-2pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Xero shoes</strong></td>
+      <td class="num">52</td>
+      <td class="num">43</td>
+      <td class="num">1.2</td>
+      <td class="num">3.1</td>
+      <td class="num"><span class="badge badge-ok">↑ +166%</span></td>
+      <td class="num">57,956</td>
+      <td class="num">33.4%</td>
+      <td class="num">360</td>
+      <td class="num"><span class="badge badge-warning">117d</span></td>
+      <td class="num">26% <small style="color:#6b7280">(-21pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Fare</strong></td>
+      <td class="num">87</td>
+      <td class="num">22</td>
+      <td class="num">1.9</td>
+      <td class="num">1.6</td>
+      <td class="num"><span class="badge badge-danger">↓ -19%</span></td>
+      <td class="num">22,658</td>
+      <td class="num">29.6%</td>
+      <td class="num">339</td>
+      <td class="num"><span class="badge badge-danger">216d</span></td>
+      <td class="num">50% <small style="color:#6b7280">(+3pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Be Lenka</strong></td>
+      <td class="num">51</td>
+      <td class="num">15</td>
+      <td class="num">1.1</td>
+      <td class="num">1.1</td>
+      <td class="num"><span class="badge badge-neutral">→ -5%</span></td>
+      <td class="num">22,428</td>
+      <td class="num">37.0%</td>
+      <td class="num">348</td>
+      <td class="num"><span class="badge badge-danger">325d</span></td>
+      <td class="num">47% <small style="color:#6b7280">(-8pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Baby Bare</strong></td>
+      <td class="num">35</td>
+      <td class="num">17</td>
+      <td class="num">0.8</td>
+      <td class="num">1.2</td>
+      <td class="num"><span class="badge badge-ok">↑ +56%</span></td>
+      <td class="num">19,346</td>
+      <td class="num">28.1%</td>
+      <td class="num">318</td>
+      <td class="num"><span class="badge badge-danger">262d</span></td>
+      <td class="num">47% <small style="color:#6b7280">(+1pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Tip Toey Joey</strong></td>
+      <td class="num">94</td>
+      <td class="num">16</td>
+      <td class="num">2.1</td>
+      <td class="num">1.1</td>
+      <td class="num"><span class="badge badge-danger">↓ -45%</span></td>
+      <td class="num">18,157</td>
+      <td class="num">32.9%</td>
+      <td class="num">199</td>
+      <td class="num"><span class="badge badge-danger">174d</span></td>
+      <td class="num">69% <small style="color:#6b7280">(+10pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>MTNG</strong></td>
+      <td class="num">42</td>
+      <td class="num">14</td>
+      <td class="num">0.9</td>
+      <td class="num">1.0</td>
+      <td class="num"><span class="badge badge-neutral">→ +7%</span></td>
+      <td class="num">17,182</td>
+      <td class="num">37.1%</td>
+      <td class="num">452</td>
+      <td class="num"><span class="badge badge-danger">452d</span></td>
+      <td class="num">7% <small style="color:#6b7280">(-57pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Keen</strong></td>
+      <td class="num">11</td>
+      <td class="num">14</td>
+      <td class="num">0.2</td>
+      <td class="num">1.0</td>
+      <td class="num"><span class="badge badge-neutral">nový</span></td>
+      <td class="num">15,474</td>
+      <td class="num">30.2%</td>
+      <td class="num">64</td>
+      <td class="num"><span class="badge badge-warning">64d</span></td>
+      <td class="num">29% <small style="color:#6b7280">(-17pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>D.D.step</strong></td>
+      <td class="num">46</td>
+      <td class="num">23</td>
+      <td class="num">1.0</td>
+      <td class="num">1.6</td>
+      <td class="num"><span class="badge badge-ok">↑ +61%</span></td>
+      <td class="num">14,669</td>
+      <td class="num">34.2%</td>
+      <td class="num">127</td>
+      <td class="num"><span class="badge badge-warning">77d</span></td>
+      <td class="num">17% <small style="color:#6b7280">(-30pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Muris</strong></td>
+      <td class="num">14</td>
+      <td class="num">12</td>
+      <td class="num">0.3</td>
+      <td class="num">0.9</td>
+      <td class="num"><span class="badge badge-ok">↑ +176%</span></td>
+      <td class="num">11,281</td>
+      <td class="num">12.9%</td>
+      <td class="num">74</td>
+      <td class="num"><span class="badge badge-warning">86d</span></td>
+      <td class="num">50% <small style="color:#6b7280">(+14pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Jonap</strong></td>
+      <td class="num">41</td>
+      <td class="num">12</td>
+      <td class="num">0.9</td>
+      <td class="num">0.9</td>
+      <td class="num"><span class="badge badge-neutral">→ -6%</span></td>
+      <td class="num">10,873</td>
+      <td class="num">26.7%</td>
+      <td class="num">121</td>
+      <td class="num"><span class="badge badge-danger">141d</span></td>
+      <td class="num">25% <small style="color:#6b7280">(-29pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Protetika</strong></td>
+      <td class="num">54</td>
+      <td class="num">13</td>
+      <td class="num">1.2</td>
+      <td class="num">0.9</td>
+      <td class="num"><span class="badge badge-danger">↓ -23%</span></td>
+      <td class="num">10,664</td>
+      <td class="num">31.0%</td>
+      <td class="num">113</td>
+      <td class="num"><span class="badge badge-danger">122d</span></td>
+      <td class="num">54% <small style="color:#6b7280">(+0pp vs. pre)</small></td>
+    </tr><tr>
+      <td class="nc"><strong>Natural barefoot</strong></td>
+      <td class="num">25</td>
+      <td class="num">7</td>
+      <td class="num">0.6</td>
+      <td class="num">0.5</td>
+      <td class="num"><span class="badge badge-danger">↓ -10%</span></td>
+      <td class="num">9,958</td>
+      <td class="num">43.5%</td>
+      <td class="num">83</td>
+      <td class="num"><span class="badge badge-danger">166d</span></td>
+      <td class="num">0%</td>
+    </tr><tr>
+      <td class="nc"><strong>Jampi</strong></td>
+      <td class="num">0</td>
+      <td class="num">7</td>
+      <td class="num">0.0</td>
+      <td class="num">0.5</td>
+      <td class="num"><span class="badge badge-neutral">nový</span></td>
+      <td class="num">9,627</td>
+      <td class="num">39.0%</td>
+      <td class="num">0</td>
+      <td class="num">—</td>
+      <td class="num">0%</td>
+    </tr><tr>
+      <td class="nc"><strong>Igor</strong></td>
+      <td class="num">55</td>
+      <td class="num">14</td>
+      <td class="num">1.2</td>
+      <td class="num">1.0</td>
+      <td class="num"><span class="badge badge-danger">↓ -18%</span></td>
+      <td class="num">9,360</td>
+      <td class="num">36.2%</td>
+      <td class="num">171</td>
+      <td class="num"><span class="badge badge-danger">171d</span></td>
+      <td class="num">0%</td>
+    </tr><tr>
+      <td class="nc"><strong>Saguaro</strong></td>
+      <td class="num">34</td>
+      <td class="num">21</td>
+      <td class="num">0.8</td>
+      <td class="num">1.5</td>
+      <td class="num"><span class="badge badge-ok">↑ +99%</span></td>
+      <td class="num">8,672</td>
+      <td class="num">71.9%</td>
+      <td class="num">176</td>
+      <td class="num"><span class="badge badge-warning">117d</span></td>
+      <td class="num">24%</td>
+    </tr><tr>
+      <td class="nc"><strong>Ahinsa</strong></td>
+      <td class="num">16</td>
+      <td class="num">3</td>
+      <td class="num">0.4</td>
+      <td class="num">0.2</td>
+      <td class="num"><span class="badge badge-danger">↓ -40%</span></td>
+      <td class="num">7,369</td>
+      <td class="num">49.4%</td>
+      <td class="num">116</td>
+      <td class="num"><span class="badge badge-danger">541d</span></td>
+      <td class="num">133%</td>
+    </tr><tr>
+      <td class="nc"><strong>Bundgaard</strong></td>
+      <td class="num">5</td>
+      <td class="num">5</td>
+      <td class="num">0.1</td>
+      <td class="num">0.4</td>
+      <td class="num"><span class="badge badge-neutral">nový</span></td>
+      <td class="num">7,277</td>
+      <td class="num">40.1%</td>
+      <td class="num">0</td>
+      <td class="num">—</td>
+      <td class="num">0%</td>
+    </tr><tr>
+      <td class="nc"><strong>bLIFESTYLE</strong></td>
+      <td class="num">24</td>
+      <td class="num">5</td>
+      <td class="num">0.5</td>
+      <td class="num">0.4</td>
+      <td class="num"><span class="badge badge-danger">↓ -33%</span></td>
+      <td class="num">6,357</td>
+      <td class="num">22.1%</td>
+      <td class="num">0</td>
+      <td class="num">—</td>
+      <td class="num">0%</td>
+    </tr></tbody>
+    </table>
+  </div>
+  <p class="fn">Pre-kampaň = 1.5.–14.6.2026 (45 dní). Kampaň = 15.6.–28.6.2026 (14 dní). Dny do výprodeje při aktuálním kampanním tempu. Retino = % vratkových tiketů z prodaných kusů v kampani; závorka = delta vs. pre-kampaň.</p>
+</div>
+
+<!-- CHANNEL SPLIT -->
+<div class="sec" id="channels">
+  <div class="sec-title">🌍 Kanály a trhy — skutečná data (15/6–28/6)</div>
+  <div class="kpis" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px;">
+    <div class="kpi"><div class="lbl">CZ online</div><div class="val">5,38 M Kč</div><div class="sub">3 185 obj. · 5 646 ks · ø 966 Kč/ks</div></div>
+    <div class="kpi"><div class="lbl">DE online</div><div class="val">1,87 M Kč</div><div class="sub">745 obj. · 1 534 ks · ø 1 245 Kč/ks</div></div>
+    <div class="kpi"><div class="lbl">SK online</div><div class="val">941 k Kč</div><div class="sub">589 obj. · 1 046 ks · ø 909 Kč/ks</div></div>
+    <div class="kpi warn"><div class="lbl">Melody POS</div><div class="val">1,25 M Kč</div><div class="sub">2 822 dokladů · 5 883 ks · 13,2 % celku</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div class="cbox"><h3>Obrat podle kanálu/trhu (Kč)</h3><div class="ch" style="height:180px;"><canvas id="siteRevChart"></canvas></div></div>
+    <div class="cbox"><h3>Průměrná cena/ks (Kč) — DE vs. CZ/SK</h3><div class="ch" style="height:180px;"><canvas id="sitePriceChart"></canvas></div></div>
+  </div>
+  <div class="alert" style="margin-top:12px;">
+    <strong>Pozn. k Melody POS:</strong> Kampaňové SKU se nepodařilo napárovat na Melody prodeje přes <code>variant_code</code> — Melody patrně používá jiné kódy. Melody celkem prodal za 1,25 M Kč (13,2 % z celkového obratu) — tato data nejsou zahrnutá v kampanní analýze.
+  </div>
+</div>
+
+<!-- KONKURENCNI ANALYZA -->
+<div class="sec" id="competition">
+  <div class="sec-title">🔍 Konkurenční analýza — naboso.cz + LittleShoes.cz vs. bosonozka.cz</div>
+  
+  <div class="kpis" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px;">
+    <div class="kpi"><div class="lbl">Zdrojová data konkurence</div><div class="val" style="font-size:16px;">naboso.cz + LS</div><div class="sub">590 + 3 577 produktů (scrape)</div></div>
+    <div class="kpi danger"><div class="lbl">Značky kde Bosono dražší &gt;200 Kč</div><div class="val">13 značek</div><div class="sub">vč. KOEL, Froddo, Be Lenka, Fare</div></div>
+    <div class="kpi warn"><div class="lbl">Froddo — naboso.cz sleva</div><div class="val">23–38 %</div><div class="sub">100 produktů ve slevě (vs. Bosono 30 %)</div></div>
+    <div class="kpi warn"><div class="lbl">MTNG — srovnatelné ceny</div><div class="val">≈ stejné</div><div class="sub">NaBoso -35 %, Bosono -35 %</div></div>
+  </div>
+
+  <div class="alert" style="margin-bottom:14px;">
+    <strong>⚠ Metodická poznámka:</strong> Srovnáváme <strong>průměrnou Bosono kampaňovou cenu</strong> vs. <strong>nejnižší cenu konkurence</strong> pro danou značku. Rozdíly mohou být způsobeny odlišnými modely/kategoriemi (např. LS prodává starší sezónu Be Lenka). Přesto jsou indikativní — pokud zákazník hledá „Froddo levně" a najde na LittleShoes od 573 Kč (vs. Bosono od 643 Kč+ ), je to reálný churn risk.
+  </div>
+
+  <!-- Critical findings -->
+  <div class="rcards" style="margin-bottom:20px;">
+    <div class="rcard d">
+      <div class="rt">🔴 Kritické — Bosono výrazně dražší než konkurence (200+ Kč)</div>
+      <ul>
+        <li><strong>Be Lenka</strong>: Bosono avg 1 544 Kč vs. LittleShoes od 643 Kč (+901 Kč) — LittleShoes patrně starší modely, ale zákazník to nerozliší</li>
+        <li><strong>Fare</strong>: Bosono 941 Kč vs. LittleShoes od 490 Kč (+451 Kč) — velmi konkurenční trh</li>
+        <li><strong>Beda</strong>: Bosono 745 Kč vs. LittleShoes od 327 Kč (+418 Kč)</li>
+        <li><strong>Xero shoes</strong>: Bosono 1 239 Kč vs. LittleShoes od 944 Kč (+295 Kč)</li>
+        <li><strong>KOEL</strong>: Bosono 1 216 Kč vs. LittleShoes od 953 Kč (+263 Kč)</li>
+        <li><strong>Froddo</strong>: Bosono 807 Kč vs. NaBoso od 749 Kč, LittleShoes od 573 Kč (+234 Kč) — <em>toto je hlavní problém pro naše největší stock položky</em></li>
+        <li><strong>Baby Bare</strong>: Bosono 1 104 Kč vs. NaBoso od 899 Kč (+205 Kč)</li>
+      </ul>
+    </div>
+    <div class="rcard w">
+      <div class="rt">🟡 Sledovat — srovnatelné nebo mírně dražší</div>
+      <ul>
+        <li><strong>MTNG</strong>: Bosono 933 Kč vs. NaBoso 987 Kč — Bosono levnější! Zachovat cenu.</li>
+        <li><strong>Pegres</strong>: Bosono 749 Kč vs. NaBoso od 712 Kč — prakticky srovnatelné, OK</li>
+        <li><strong>D.D.Step</strong>: Bosono 641 Kč vs. NaBoso 1 156 Kč — Bosono výrazně levnější (jiné modely?)</li>
+      </ul>
+    </div>
+    <div class="rcard g">
+      <div class="rt">🟢 Klíčové zjištění — proč „mrtva" položky nereagují</div>
+      <ul>
+        <li>Froddo a KOEL — naše největší stock — jsou na naboso.cz i LittleShoes ve slevě <strong>stejně hluboko nebo hlouběji</strong></li>
+        <li>Zákazník hledající „Froddo výprodej" najde NaBoso s –38 % před Bosonem s –30 %</li>
+        <li><strong>Tržní cena clearance Froddo je cca 750–850 Kč</strong> (naboso.cz dolní hranice 749 Kč) — Bosono by mělo být na 750–800 Kč pro konkurenceschopnost</li>
+        <li>LittleShoes má 241 Froddo produktů ve slevě (Bosono má 227 SKU) — čelíme obrovskému konkurenčnímu tlaku na hlavní značku výprodeje</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="twrap">
+    <table>
+      <thead><tr>
+        <th>Značka</th>
+        <th class="num">Bosono sklad (ks)</th>
+        <th class="num">Bosono sleva</th>
+        <th class="num">Bosono avg cena (Kč)</th>
+        <th class="num">NaBoso.cz (slevy/disc)</th>
+        <th class="num">LittleShoes.cz (slevy/disc)</th>
+        <th class="num">Nejnižší cena konkurence</th>
+        <th class="num">Pozice Bosono</th>
+        <th>Doporučení</th>
+      </tr></thead>
+      <tbody><tr>
+      <td class="nc"><strong>KOEL</strong></td>
+      <td class="num">869</td>
+      <td class="num">31%</td>
+      <td class="num">1,216</td>
+      <td class="num">0/0</td>
+      <td class="num">121 (19%)</td>
+      <td class="num">953</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈953 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>Froddo</strong></td>
+      <td class="num">1050</td>
+      <td class="num">30%</td>
+      <td class="num">807</td>
+      <td class="num">100 (23%)</td>
+      <td class="num">306 (27%)</td>
+      <td class="num">573</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈573 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>Be Lenka</strong></td>
+      <td class="num">336</td>
+      <td class="num">34%</td>
+      <td class="num">1,544</td>
+      <td class="num">0/0</td>
+      <td class="num">151 (22%)</td>
+      <td class="num">643</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈643 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>Xero shoes</strong></td>
+      <td class="num">357</td>
+      <td class="num">32%</td>
+      <td class="num">1,239</td>
+      <td class="num">1 (17%)</td>
+      <td class="num">69 (20%)</td>
+      <td class="num">944</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈944 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>MTNG</strong></td>
+      <td class="num">426</td>
+      <td class="num">32%</td>
+      <td class="num">933</td>
+      <td class="num">19 (33%)</td>
+      <td class="num">20 (22%)</td>
+      <td class="num">889</td>
+      <td class="num"><span class="badge badge-neutral">Srovnatelné</span></td>
+      <td>OK</td>
+    </tr><tr>
+      <td class="nc"><strong>Fare</strong></td>
+      <td class="num">337</td>
+      <td class="num">31%</td>
+      <td class="num">941</td>
+      <td class="num">0/0</td>
+      <td class="num">23 (28%)</td>
+      <td class="num">490</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈490 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>Baby Bare</strong></td>
+      <td class="num">295</td>
+      <td class="num">32%</td>
+      <td class="num">1,104</td>
+      <td class="num">17 (19%)</td>
+      <td class="num">45 (23%)</td>
+      <td class="num">899</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈899 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>Shapen</strong></td>
+      <td class="num">165</td>
+      <td class="num">34%</td>
+      <td class="num">1,813</td>
+      <td class="num">0/0</td>
+      <td class="num">81 (18%)</td>
+      <td class="num">1393</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈1393 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>Pegres</strong></td>
+      <td class="num">259</td>
+      <td class="num">29%</td>
+      <td class="num">749</td>
+      <td class="num">17 (30%)</td>
+      <td class="num">23 (27%)</td>
+      <td class="num">712</td>
+      <td class="num"><span class="badge badge-neutral">Srovnatelné</span></td>
+      <td>OK</td>
+    </tr><tr>
+      <td class="nc"><strong>Camper</strong></td>
+      <td class="num">155</td>
+      <td class="num">34%</td>
+      <td class="num">1,078</td>
+      <td class="num">0/0</td>
+      <td class="num">93 (30%)</td>
+      <td class="num">850</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈850 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>Beda</strong></td>
+      <td class="num">122</td>
+      <td class="num">33%</td>
+      <td class="num">745</td>
+      <td class="num">14 (18%)</td>
+      <td class="num">117 (26%)</td>
+      <td class="num">327</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈327 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>Peerko</strong></td>
+      <td class="num">54</td>
+      <td class="num">33%</td>
+      <td class="num">1,609</td>
+      <td class="num">0/0</td>
+      <td class="num">30 (18%)</td>
+      <td class="num">1743</td>
+      <td class="num"><span class="badge badge-ok">–134 CZK</span></td>
+      <td>Výhoda — držet</td>
+    </tr><tr>
+      <td class="nc"><strong>Jonap</strong></td>
+      <td class="num">116</td>
+      <td class="num">28%</td>
+      <td class="num">925</td>
+      <td class="num">0/0</td>
+      <td class="num">91 (24%)</td>
+      <td class="num">659</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈659 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>Igor</strong></td>
+      <td class="num">169</td>
+      <td class="num">33%</td>
+      <td class="num">604</td>
+      <td class="num">0/0</td>
+      <td class="num">22 (30%)</td>
+      <td class="num">518</td>
+      <td class="num"><span class="badge badge-warning">+86 CZK</span></td>
+      <td>Sledovat</td>
+    </tr><tr>
+      <td class="nc"><strong>Aylla</strong></td>
+      <td class="num">50</td>
+      <td class="num">33%</td>
+      <td class="num">1,584</td>
+      <td class="num">0/0</td>
+      <td class="num">15 (29%)</td>
+      <td class="num">1163</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈1163 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>Muris</strong></td>
+      <td class="num">74</td>
+      <td class="num">31%</td>
+      <td class="num">1,145</td>
+      <td class="num">18 (34%)</td>
+      <td class="num">38 (24%)</td>
+      <td class="num">663</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈663 CZK</td>
+    </tr><tr>
+      <td class="nc"><strong>D.D.step</strong></td>
+      <td class="num">125</td>
+      <td class="num">29%</td>
+      <td class="num">641</td>
+      <td class="num">8 (29%)</td>
+      <td class="num">57 (27%)</td>
+      <td class="num">545</td>
+      <td class="num"><span class="badge badge-warning">+96 CZK</span></td>
+      <td>Sledovat</td>
+    </tr><tr>
+      <td class="nc"><strong>Keen</strong></td>
+      <td class="num">64</td>
+      <td class="num">28%</td>
+      <td class="num">1,165</td>
+      <td class="num">4 (17%)</td>
+      <td class="num">14 (23%)</td>
+      <td class="num">959</td>
+      <td class="num"><span class="badge badge-danger">DRAŽŠÍ</span></td>
+      <td>Snížit na ≈959 CZK</td>
+    </tr></tbody>
+    </table>
+  </div>
+  <p class="fn" style="margin-top:6px;">NaBoso/LS = počet produktů ve slevě (průměrná sleva %). Nejnižší cena = nejlevnější nalezený produkt dané značky u konkurence ve slevě. Srovnáváme agregáty — produkty nemusejí být identické.</p>
+
+  <!-- Competitive chart -->
+  <div class="cbox" style="margin-top:16px;">
+    <h3>Bosono kampaňová cena vs. nejnižší cena konkurence (top 12 značek dle skladu)</h3>
+    <div class="ch" style="height:220px;"><canvas id="compChart"></canvas></div>
+    <p class="fn" style="margin-top:5px;">Červené = Bosono výrazně dražší (akce nutná), žluté = srovnatelné, zelené = Bosono levnější.</p>
+  </div>
+</div>
+
+<!-- DOPORUČENÍ -->
+<div class="sec">
+  <div class="sec-title">Doporučení pro zbývající dny kampaně (ke 29/6)</div>
+  <div class="rcards">
+    <div class="rcard d">
+      <div class="rt">🔴 OKAMŽITÁ AKCE — do 48 hodin</div>
+      <ul>
+        <li>MTNG Free Care (všechny barvy): 0–4 prodeje/8t, WoS &gt;100t → bundle 2+1 nebo 40–45% sleva</li>
+        <li>Boskyshoes Performance + Enduro: 0–2 prodeje, WoS &gt;80t → extrémní vel. okamžitě do outletu</li>
+        <li>Be Lenka Promenade 2.0: 1–2 prodeje/model, WoS &gt;100t → zvážit vrácení/swap s dodavatelem</li>
+        <li>OK bare (96 % mrtva, téměř 0 prodeje): celá značka do B2B/outlet clearance</li>
+        <li>Ahinsa (90 % mrtva, WoS &gt;42t): influencer/affiliate push nebo outlet</li>
+        <li>Camper (89 % mrtva, 19.5 % marže po slevě): minimální prostor pro hlubší slevu → pouze výprodej za stávající ceny nebo vrácení dodavateli</li>
+      </ul>
+    </div>
+    <div class="rcard w">
+      <div class="rt">🟡 DO 3–5 DNÍ — adjustace slevy</div>
+      <ul>
+        <li>Froddo Botaniq laces (WoS 13–24t): pohyb existuje, ale nestačí → +5 % (30 % → 35 %)</li>
+        <li>KOEL Remi PU Fabrics mimo Gold (WoS 18–45t): Gold jde dobře, ostatní ne → individualizovat ceny per barvu</li>
+        <li>Xero Z-Trail + D-Trail (0–3 prodeje, prémiová cena): cílená e-mail kampaň na outdoor/running segment</li>
+        <li>Shapen (87 % mrtva, WoS &gt;52t): jiný zákaznický segment, oddělit komunikaci od obuvi</li>
+        <li>Fare Plátěnky (76 % mrtva): extrémní velikosti (38, 41, 42) na 40 %, zbytek na 35 %</li>
+      </ul>
+    </div>
+    <div class="rcard g">
+      <div class="rt">🟢 PONECHAT BEZ ZMĚNY</div>
+      <ul>
+        <li>Froddo Canvas Blue+/Dark blue/Fuchsia (WoS 15–17t, marže 30–36 %): prodávají se</li>
+        <li>KOEL Remi Gold + Madison Grey (WoS ~11–15t): dobrý pohyb, sleva funguje</li>
+        <li>Pegres BF57U (WoS 22–26t): stabilní prodej — zachovat 35 %</li>
+        <li>Obuv do vody (47.6 % mrtva, nejlepší kategorie): sezóna stále trvá — ponechat</li>
+        <li>Froddo Canvas (dětské, 165 SKU, 15 % sleva, marže 50 %+): nezvyšovat slevu</li>
+      </ul>
+    </div>
+    <div class="rcard d">
+      <div class="rt">⏱ TAKTIKA DO KONCE SEZÓNY</div>
+      <ul>
+        <li>Formálně rozhodnout o délce trvání kampaně (min. do 31/7 nebo do vyprodání)</li>
+        <li>Flash akce: 48h 40 % sleva na MTNG + Boskyshoes s countdown timerem</li>
+        <li>Bundle: 2 páry sandálů za cenu 1.5× vyšší varianty — pro extrémní velikosti</li>
+        <li>E-mailing/push odesílat v <strong>neděli večer nebo pondělí ráno</strong> (peak DOW)</li>
+        <li>B2B outlet: kontaktovat barefoot komunity, školy, tělocvičny pro hromadný nákup zbytků</li>
+        <li>Fyzická prodejna (Melody): prioritizovat zbývající KOEL + Froddo přes POS</li>
+        <li>Xero shoes: zvážit vrácení do US skladu pokud podmínky dodavatele umožňují</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- OMEZENÍ -->
+<div class="sec">
+  <div class="sec-title">Předpoklady, omezení a co by analýzu vylepšilo</div>
+  <div class="cgrid2">
+    <div class="cbox">
+      <h3>⚠ Datová omezení</h3>
+      <ul style="list-style:none;font-size:12.5px;color:var(--muted);">
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">❌</span> <strong>Skutečné prodeje per SKU v kampani</strong> — DB byl nedostupný. "Prodeje 8t" z CSV jsou pre-kampaňová data.</li>
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">❌</span> <strong>Míra vratek (Retino)</strong> — bez DB nelze porovnat campaign vs. pre-campaign return rate.</li>
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">❌</span> <strong>Melody POS vs. online split</strong> — melody_sales tabulka nedostupná.</li>
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">❌</span> <strong>CZ vs. SK vs. DE split</strong> — denní data kombinovaná.</li>
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">❌</span> <strong>Živý sklad</strong> — CSV snapshot, ne real-time stav.</li>
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">⚠</span> <strong>WoS je konzervativní odhad</strong> — kampaň by měla tempo zvyšovat vs. pre-kampaňová baseline.</li>
+      </ul>
+    </div>
+    <div class="cbox">
+      <h3>✅ Zdroje dat použité v analýze</h3>
+      <ul style="list-style:none;font-size:12.5px;color:var(--muted);">
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">✅</span> <strong>DB dotaz 1</strong> — denní obrat + kusy + průměrná cena (1/5–28/6, 59 řádků)</li>
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">✅</span> <strong>DB dotaz 2</strong> — schéma tabulek (shoptet_invoices, invoice_items, product_variants, stock_snapshots, retino_tickets, melody_sales)</li>
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">✅</span> <strong>DB dotaz 3</strong> — ceny variant s common_price_czk (vzorek diskontovaných produktů)</li>
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">✅</span> <strong>DB dotaz 4</strong> — transakční ceny 5 vzorkových SKU (2026-04-01 – 2026-06-28)</li>
+        <li style="margin-bottom:7px;padding-left:14px;position:relative;"><span style="position:absolute;left:0;">✅</span> <strong>CSV analýza</strong> — doprodej_SS2026_SKU.csv (2388 SKU, 6721 ks, kompletní sklad+nákup ceny)</li>
+      </ul>
+      <p style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5;"><strong>Co by analýzu výrazně vylepšilo:</strong> Živá DB data (prodeje per SKU v kampani), Retino míra vratek, Melody POS data, e-mailing send dates pro korelaci se špičkami, konkurenční cenový kontext.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+const labels = ["05-01", "05-02", "05-03", "05-04", "05-05", "05-06", "05-07", "05-08", "05-09", "05-10", "05-11", "05-12", "05-13", "05-14", "05-15", "05-16", "05-17", "05-18", "05-19", "05-20", "05-21", "05-22", "05-23", "05-24", "05-25", "05-26", "05-27", "05-28", "05-29", "05-30", "05-31", "06-01", "06-02", "06-03", "06-04", "06-05", "06-06", "06-07", "06-08", "06-09", "06-10", "06-11", "06-12", "06-13", "06-14", "06-15", "06-16", "06-17", "06-18", "06-19", "06-20", "06-21", "06-22", "06-23", "06-24", "06-25", "06-26", "06-27", "06-28"];
+const revData = [527460, 564712, 1129942, 1412809, 1429552, 1051931, 831229, 644500, 598436, 979812, 1562311, 934982, 970977, 950336, 782803, 494281, 862488, 1100933, 1100053, 1072339, 872371, 753945, 621422, 1076833, 1366077, 1184523, 1093925, 832390, 712335, 390368, 795439, 798765, 813432, 683588, 580105, 692402, 337622, 606287, 730997, 579157, 449721, 476427, 524378, 302138, 514815, 740304, 682455, 405702, 627180, 455376, 305888, 473164, 917791, 922155, 835960, 597247, 529364, 260202, 434711];
+const priceData = [1280, 1163, 1158, 1117, 1063, 1142, 1153, 1308, 1325, 1276, 1255, 1139, 1137, 1127, 1097, 1097, 1157, 1141, 1115, 1111, 1096, 1126, 1156, 1102, 1117, 1108, 1138, 1142, 1157, 1123, 1076, 1039, 1060, 1034, 1059, 1097, 1064, 1077, 1087, 1076, 1075, 1137, 1053, 1013, 1026, 1047, 1061, 1042, 1007, 1096, 1066, 1066, 1002, 985, 942, 940, 1022, 1000, 992];
+const june15Idx = labels.indexOf('06-15');
+const june22Idx = labels.indexOf('06-22');
+const june1Idx = labels.indexOf('06-01');
+
+// Daily chart
+new Chart(document.getElementById('dailyChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'Obrat CZK bez DPH',
+        data: revData,
+        backgroundColor: labels.map((l,i) => {
+          if(i >= june22Idx) return 'rgba(248,113,113,0.62)';
+          if(i >= june1Idx) return 'rgba(251,191,36,0.52)';
+          return 'rgba(79,142,247,0.52)';
+        }),
+        borderColor:'transparent', order:2, yAxisID:'y'
+      },
+      {
+        label:'Ø cena/ks (CZK)',
+        data:priceData,
+        type:'line', borderColor:'#7c5cfc', backgroundColor:'transparent',
+        borderWidth:2, pointRadius:0, tension:0.35, order:1, yAxisID:'y2'
+      }
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ labels:{ color:'#8891a8', font:{ size:11 } } },
+      tooltip:{ callbacks:{ label:function(c){ return c.dataset.label+': '+c.raw.toLocaleString('cs-CZ'); } } }
+    },
+    scales:{
+      x:{ ticks:{ color:'#8891a8', font:{ size:9.5 }, maxRotation:45, autoSkip:true, maxTicksLimit:18 }, grid:{ color:'#2d3149' } },
+      y:{ ticks:{ color:'#8891a8', font:{ size:10 }, callback:v=>(v/1000).toFixed(0)+'k' }, grid:{ color:'#2d3149' } },
+      y2:{ position:'right', ticks:{ color:'#7c5cfc', font:{ size:10 }, callback:v=>v+' Kč' }, grid:{ display:false } }
+    }
+  }
+});
+
+// Brand chart
+new Chart(document.getElementById('brandChart'), {
+  type:'bar',
+  data:{ labels:["KOEL", "Froddo", "Be Lenka", "Xero shoes", "MTNG", "Fare", "Baby Bare", "Shapen", "Pegres", "Boskyshoes", "Tip Toey Joey", "Ahinsa", "Camper", "OK bare", "Beda"], datasets:[
+    { label:'Nák. kapitál (tis. CZK)', data:[698, 578, 347, 320, 269, 242, 239, 233, 146, 145, 144, 135, 134, 78, 78], backgroundColor:'rgba(79,142,247,0.65)', yAxisID:'y' },
+    { label:'Sklad (ks)', data:[869, 1050, 336, 357, 426, 337, 295, 165, 259, 145, 198, 112, 155, 62, 122], type:'line', borderColor:'#7c5cfc', fill:false, yAxisID:'y2', tension:0.3, pointRadius:4, borderWidth:2 }
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ labels:{ color:'#8891a8', font:{ size:11 } } } },
+    scales:{ x:{ ticks:{ color:'#8891a8', font:{ size:10 }, maxRotation:45 }, grid:{ color:'#2d3149' } },
+      y:{ ticks:{ color:'#8891a8', font:{ size:10 } }, grid:{ color:'#2d3149' } },
+      y2:{ position:'right', ticks:{ color:'#7c5cfc', font:{ size:10 } }, grid:{ display:false } }
+    }
+  }
+});
+
+// Doughnut
+new Chart(document.getElementById('classChart'), {
+  type:'doughnut',
+  data:{ labels:['Mrtva (1 664 SKU)','Riziko (559 SKU)','Pozor (165 SKU)'],
+    datasets:[{ data:[4118,1871,732], backgroundColor:['rgba(248,113,113,0.7)','rgba(251,191,36,0.7)','rgba(52,211,153,0.7)'], borderColor:'#1a1d2b', borderWidth:2 }]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ position:'bottom', labels:{ color:'#8891a8', font:{ size:11 }, padding:12 } },
+      tooltip:{ callbacks:{ label:c=>c.label+': '+c.raw.toLocaleString('cs-CZ')+' ks' } }
+    }
+  }
+});
+
+// Margin chart
+const bMargins = [35.2, 30.8, 29.1, 28.9, 31.5, 24.1, 26.3, 22.9, 24.4, 27.7, 24.9, 35.0, 19.5, 21.4, 14.4];
+new Chart(document.getElementById('marginChart'), {
+  type:'bar',
+  data:{ labels:["KOEL", "Froddo", "Be Lenka", "Xero shoes", "MTNG", "Fare", "Baby Bare", "Shapen", "Pegres", "Boskyshoes", "Tip Toey Joey", "Ahinsa", "Camper", "OK bare", "Beda"], datasets:[{ label:'Marže po slevě (%)',
+    data:bMargins, backgroundColor:bMargins.map(v=>v<20?'rgba(248,113,113,0.7)':v<25?'rgba(251,191,36,0.7)':'rgba(52,211,153,0.7)'),
+    borderColor:'transparent'
+  }]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ display:false } },
+    scales:{ x:{ ticks:{ color:'#8891a8', font:{ size:10 }, maxRotation:45 }, grid:{ color:'#2d3149' } },
+      y:{ ticks:{ color:'#8891a8', font:{ size:10 }, callback:v=>v+'%' }, grid:{ color:'#2d3149' }, min:0, max:45 }
+    }
+  }
+});
+
+// DOW chart
+const dailyRaw = [["2026-05-01", 192, 418, 527460, 1280], ["2026-05-02", 245, 494, 564712, 1163], ["2026-05-03", 445, 992, 1129942, 1158], ["2026-05-04", 669, 1289, 1412809, 1117], ["2026-05-05", 686, 1365, 1429552, 1063], ["2026-05-06", 495, 936, 1051931, 1142], ["2026-05-07", 373, 736, 831229, 1153], ["2026-05-08", 262, 533, 644500, 1308], ["2026-05-09", 253, 490, 598436, 1325], ["2026-05-10", 399, 835, 979812, 1276], ["2026-05-11", 704, 1340, 1562311, 1255], ["2026-05-12", 467, 852, 934982, 1139], ["2026-05-13", 474, 948, 970977, 1137], ["2026-05-14", 480, 942, 950336, 1127], ["2026-05-15", 422, 792, 782803, 1097], ["2026-05-16", 250, 496, 494281, 1097], ["2026-05-17", 413, 829, 862488, 1157], ["2026-05-18", 593, 1066, 1100933, 1141], ["2026-05-19", 601, 1089, 1100053, 1115], ["2026-05-20", 531, 1071, 1072339, 1111], ["2026-05-21", 440, 876, 872371, 1096], ["2026-05-22", 366, 743, 753945, 1126], ["2026-05-23", 277, 598, 621422, 1156], ["2026-05-24", 513, 1101, 1076833, 1102], ["2026-05-25", 646, 1310, 1366077, 1117], ["2026-05-26", 581, 1141, 1184523, 1108], ["2026-05-27", 511, 1015, 1093925, 1138], ["2026-05-28", 395, 763, 832390, 1142], ["2026-05-29", 333, 644, 712335, 1157], ["2026-05-30", 186, 367, 390368, 1123], ["2026-05-31", 332, 791, 795439, 1076], ["2026-06-01", 437, 790, 798765, 1039], ["2026-06-02", 415, 788, 813432, 1060], ["2026-06-03", 350, 676, 683588, 1034], ["2026-06-04", 319, 561, 580105, 1059], ["2026-06-05", 329, 643, 692402, 1097], ["2026-06-06", 161, 322, 337622, 1064], ["2026-06-07", 250, 574, 606287, 1077], ["2026-06-08", 363, 687, 730997, 1087], ["2026-06-09", 307, 549, 579157, 1076], ["2026-06-10", 252, 432, 449721, 1075], ["2026-06-11", 274, 438, 476427, 1137], ["2026-06-12", 267, 516, 524378, 1053], ["2026-06-13", 166, 307, 302138, 1013], ["2026-06-14", 258, 518, 514815, 1026], ["2026-06-15", 392, 722, 740304, 1047], ["2026-06-16", 351, 660, 682455, 1061], ["2026-06-17", 220, 398, 405702, 1042], ["2026-06-18", 352, 634, 627180, 1007], ["2026-06-19", 223, 420, 455376, 1096], ["2026-06-20", 163, 291, 305888, 1066], ["2026-06-21", 236, 451, 473164, 1066], ["2026-06-22", 506, 929, 917791, 1002], ["2026-06-23", 536, 946, 922155, 985], ["2026-06-24", 469, 900, 835960, 942], ["2026-06-25", 378, 643, 597247, 940], ["2026-06-26", 281, 524, 529364, 1022], ["2026-06-27", 166, 264, 260202, 1000], ["2026-06-28", 246, 444, 434711, 992]];
+const dowSums=[0,0,0,0,0,0,0], dowCnt=[0,0,0,0,0,0,0];
+dailyRaw.forEach(([date,inv,units,rev,price])=>{ const dow=new Date(date).getDay(); dowSums[dow]+=rev; dowCnt[dow]++; });
+const dowAvg=dowSums.map((s,i)=>dowCnt[i]?Math.round(s/dowCnt[i]):0);
+const dowOrder=[1,2,3,4,5,6,0], dowLabels=['Po','Út','St','Čt','Pá','So','Ne'];
+const dowVals=dowOrder.map(i=>dowAvg[i]);
+const gAvg=dowVals.reduce((a,b)=>a+b,0)/7;
+new Chart(document.getElementById('dowChart'), {
+  type:'bar',
+  data:{ labels:dowLabels, datasets:[{ label:'Prům. obrat/den (CZK)',
+    data:dowVals, backgroundColor:dowVals.map(v=>v>gAvg*1.1?'rgba(52,211,153,0.72)':v<gAvg*0.9?'rgba(248,113,113,0.62)':'rgba(79,142,247,0.62)'),
+    borderColor:'transparent'
+  }]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:c=>'Obrat: '+c.raw.toLocaleString('cs-CZ')+' CZK/den' } } },
+    scales:{ x:{ ticks:{ color:'#8891a8', font:{ size:11 } }, grid:{ color:'#2d3149' } },
+      y:{ ticks:{ color:'#8891a8', font:{ size:10 }, callback:v=>(v/1000).toFixed(0)+'k' }, grid:{ color:'#2d3149' } }
+    }
+  }
+});
+
+// Competition chart
+const compCtx = document.getElementById('compChart');
+if(compCtx) {
+  const compBrands = ["KOEL", "Froddo", "Be Lenka", "Xero shoes", "MTNG", "Fare", "Baby Bare", "Shapen", "Pegres", "Camper", "Beda", "Peerko"];
+  const bPrices = [1216, 807, 1544, 1239, 933, 941, 1104, 1813, 749, 1078, 745, 1609];
+  const cPrices = [953, 573, 643, 944, 889, 490, 899, 1393, 712, 850, 327, 1743];
+  const colors = bPrices.map((b,i) => {
+    if(!cPrices[i]) return 'rgba(79,142,247,0.6)';
+    const diff = b - cPrices[i];
+    return diff > 200 ? 'rgba(248,113,113,0.7)' : diff > 50 ? 'rgba(251,191,36,0.65)' : 'rgba(52,211,153,0.7)';
+  });
+  new Chart(compCtx, {
+    type:'bar',
+    data:{
+      labels: compBrands,
+      datasets:[
+        { label:'Bosono kampaňová cena (avg Kč)', data:bPrices, backgroundColor:colors, order:2 },
+        { label:'Nejnižší cena konkurence (Kč)', data:cPrices, type:'line', borderColor:'#fff', borderDash:[4,3], backgroundColor:'transparent', borderWidth:1.5, pointRadius:5, pointBackgroundColor:'#fff', order:1 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:'#8891a8', font:{ size:11 } } }, tooltip:{ callbacks:{ label:c=>c.dataset.label+': '+c.raw?.toLocaleString('cs-CZ')+' Kč' } } },
+      scales:{
+        x:{ ticks:{ color:'#8891a8', font:{ size:10 }, maxRotation:35 }, grid:{ color:'#2d3149' } },
+        y:{ ticks:{ color:'#8891a8', font:{ size:10 }, callback:v=>v+' Kč' }, grid:{ color:'#2d3149' } }
+      }
+    }
+  });
+}
+
+
+// Velocity chart
+const velCtx = document.getElementById('velChart');
+if(velCtx) {
+  new Chart(velCtx, {
+    type:'bar',
+    data:{
+      labels: ["KOEL", "Froddo", "Xero shoes", "Fare", "Be Lenka", "Baby Bare", "Tip Toey Joey", "MTNG", "Keen", "D.D.step", "Muris", "Jonap"],
+      datasets:[
+        { label:'Pre-kampaň (ks/den)', data:[7.6, 10.7, 1.2, 1.9, 1.1, 0.8, 2.1, 0.9, 0.2, 1.0, 0.3, 0.9], backgroundColor:'rgba(107,114,128,0.5)' },
+        { label:'Kampaň (ks/den)', data:[6.4, 6.8, 3.1, 1.6, 1.1, 1.2, 1.1, 1.0, 1.0, 1.6, 0.9, 0.9], backgroundColor:["rgba(248,113,113,0.7)", "rgba(248,113,113,0.7)", "rgba(52,211,153,0.7)", "rgba(248,113,113,0.7)", "rgba(251,191,36,0.7)", "rgba(52,211,153,0.7)", "rgba(248,113,113,0.7)", "rgba(52,211,153,0.7)", "rgba(52,211,153,0.7)", "rgba(52,211,153,0.7)", "rgba(52,211,153,0.7)", "rgba(251,191,36,0.7)"] }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:'#8891a8', font:{size:11} } }, tooltip:{ callbacks:{ label:c=>c.dataset.label+': '+c.raw+' ks/den' } } },
+      scales:{ x:{ ticks:{ color:'#8891a8', font:{size:10}, maxRotation:35 }, grid:{color:'#2d3149'} }, y:{ ticks:{ color:'#8891a8', font:{size:10} }, grid:{color:'#2d3149'} } }
+    }
+  });
+}
+
+// Site revenue chart
+const siteRevCtx = document.getElementById('siteRevChart');
+if(siteRevCtx) {
+  new Chart(siteRevCtx, {
+    type:'doughnut',
+    data:{
+      labels:['CZ online (5,38M)','DE online (1,87M)','SK online (941K)','Melody POS (1,25M)'],
+      datasets:[{ data:[5375279,1871475,940746,1249142], backgroundColor:['rgba(79,142,247,0.8)','rgba(52,211,153,0.8)','rgba(251,191,36,0.8)','rgba(167,139,250,0.8)'] }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ labels:{ color:'#8891a8', font:{size:10} } } } }
+  });
+}
+
+// Site price chart
+const sitePriceCtx = document.getElementById('sitePriceChart');
+if(sitePriceCtx) {
+  new Chart(sitePriceCtx, {
+    type:'bar',
+    data:{
+      labels:['CZ','DE','SK'],
+      datasets:[{ label:'Ø cena/ks (Kč bez VAT)', data:[966,1245,909], backgroundColor:['rgba(79,142,247,0.7)','rgba(52,211,153,0.7)','rgba(251,191,36,0.7)'] }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      scales:{ x:{ ticks:{ color:'#8891a8' }, grid:{color:'#2d3149'} }, y:{ ticks:{ color:'#8891a8', callback:v=>v+' Kč' }, grid:{color:'#2d3149'} } }
+    }
+  });
+}
+
+</script>
+</body>
+</html>
