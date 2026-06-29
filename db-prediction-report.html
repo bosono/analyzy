@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bosono — Prediktivní analýza nákupu Q1–Q2 2027</title>
+<style>
+  :root {
+    --brand:  #1a3a5c;
+    --accent: #e85d2f;
+    --green:  #16a34a;
+    --red:    #dc2626;
+    --orange: #d97706;
+    --blue:   #2563eb;
+    --purple: #7c3aed;
+    --muted:  #64748b;
+    --bg:     #f1f5f9;
+    --card:   #ffffff;
+    --border: #e2e8f0;
+    --text:   #1e293b;
+    --text2:  #475569;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+
+  header {
+    background: linear-gradient(135deg, #0f2440 0%, #1a3a5c 60%, #1e4976 100%);
+    color: #fff;
+    padding: 36px 40px 30px;
+  }
+  header .eyebrow { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; opacity: .6; margin-bottom: 8px; }
+  header h1 { font-size: 26px; font-weight: 700; line-height: 1.2; }
+  header h1 em { color: #93c5fd; font-style: normal; }
+  header .sub { margin-top: 10px; font-size: 13px; opacity: .7; max-width: 640px; line-height: 1.7; }
+  header .meta-row { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  header .meta-pill { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 20px; padding: 4px 14px; font-size: 12px; }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 36px 24px 80px; }
+
+  section { margin-bottom: 44px; }
+  section > h2 {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+    color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 20px;
+  }
+
+  /* ── ALERT BOXES ── */
+  .alert { border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 14px; align-items: flex-start; }
+  .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .alert h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .alert p  { font-size: 13px; line-height: 1.6; }
+  .alert.orange { background: #fff7ed; border: 1px solid #fed7aa; }
+  .alert.blue   { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .alert.red    { background: #fef2f2; border: 1px solid #fecaca; }
+  .alert.green  { background: #f0fdf4; border: 1px solid #bbf7d0; }
+
+  /* ── CARDS ── */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .card-head { padding: 14px 20px; background: #f8fafc; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .card-head h3 { font-size: 13px; font-weight: 700; color: var(--brand); }
+  .card-body { padding: 20px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 20px; }
+  .tag-blue   { background: #dbeafe; color: #1d4ed8; }
+  .tag-green  { background: #dcfce7; color: #166534; }
+  .tag-orange { background: #fef3c7; color: #92400e; }
+  .tag-red    { background: #fee2e2; color: #991b1b; }
+  .tag-purple { background: #ede9fe; color: #6d28d9; }
+  .tag-gray   { background: #f1f5f9; color: #475569; }
+
+  /* ── GRID ── */
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media(max-width:800px) { .two-col,.three-col { grid-template-columns: 1fr; } }
+
+  /* ── BRAND TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #f8fafc; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); padding: 9px 14px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 9px 14px; border-bottom: 1px solid #f1f5f9; color: var(--text2); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+  td.brand-name { font-weight: 600; color: var(--text); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  td.arrow-up   { color: var(--green); font-weight: 700; text-align: right; }
+  td.arrow-down { color: var(--red);   font-weight: 700; text-align: right; }
+  td.arrow-flat { color: var(--orange); font-weight: 700; text-align: right; }
+
+  /* ── TREND BAR ── */
+  .trend-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .trend-bar-bg { flex: 1; background: #f1f5f9; border-radius: 20px; height: 8px; overflow: hidden; }
+  .trend-bar-fill { height: 100%; border-radius: 20px; }
+  .bar-up    { background: linear-gradient(90deg, #22c55e, #16a34a); }
+  .bar-down  { background: linear-gradient(90deg, #ef4444, #dc2626); }
+  .bar-flat  { background: linear-gradient(90deg, #f59e0b, #d97706); }
+  .trend-pct { font-size: 12px; font-weight: 700; min-width: 60px; text-align: right; }
+  .pct-up   { color: var(--green); }
+  .pct-down { color: var(--red);   }
+  .pct-flat { color: var(--orange); }
+
+  /* ── SEASON CHART ── */
+  .season-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  @media(max-width:700px) { .season-grid { grid-template-columns: 1fr; } }
+  .season-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+  .season-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+  .season-months { display: flex; gap: 4px; align-items: flex-end; height: 80px; }
+  .s-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .s-bar {
+    width: 100%; border-radius: 3px 3px 0 0;
+    min-height: 2px;
+    transition: opacity .2s;
+  }
+  .s-bar:hover { opacity: .8; }
+  .s-label { font-size: 9px; color: var(--muted); font-weight: 600; }
+  .s-val   { font-size: 9px; color: var(--text2); }
+  .peak-label { font-size: 10px; margin-top: 10px; color: var(--text2); }
+  .peak-label strong { color: var(--text); }
+
+  /* ── BUYING CALENDAR ── */
+  .buy-cal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  @media(max-width:700px) { .buy-cal { grid-template-columns: 1fr 1fr; } }
+  .buy-month {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .buy-month .bm-name { font-size: 12px; font-weight: 700; color: var(--brand); margin-bottom: 10px; }
+  .buy-month .bm-item {
+    display: flex; align-items: flex-start; gap: 6px;
+    font-size: 11.5px; color: var(--text2); margin-bottom: 5px; line-height: 1.4;
+  }
+  .buy-month .bm-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
+  }
+  .dot-now { background: var(--accent); }
+  .dot-hot { background: var(--red); }
+  .dot-med { background: var(--orange); }
+  .dot-low { background: #94a3b8; }
+
+  /* ── CORRELATION MATRIX ── */
+  .corr-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 4px solid; border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+  }
+  .corr-item h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .corr-item p  { font-size: 12.5px; color: var(--text2); line-height: 1.6; }
+  .corr-item .corr-strength {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    margin-top: 8px; padding: 2px 9px; border-radius: 20px;
+    background: #f1f5f9; color: var(--text2);
+  }
+  .ci-strong { border-left-color: var(--green); }
+  .ci-medium { border-left-color: var(--orange); }
+  .ci-weak   { border-left-color: #94a3b8; }
+  .ci-ext    { border-left-color: var(--purple); }
+
+  /* ── RISK TABLE ── */
+  .risk-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .risk-row:last-child { border-bottom: none; }
+  .risk-icon { font-size: 18px; flex-shrink: 0; }
+  .risk-text h4 { font-size: 13px; font-weight: 600; }
+  .risk-text p  { font-size: 12px; color: var(--text2); }
+
+  footer { text-align: center; font-size: 11px; color: var(--muted); padding: 24px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Bosono s.r.o. — Prediktivní analýza nákupu</div>
+  <h1>Nákupní plán <em>Q1–Q2 2027</em><br>na základě historických dat</h1>
+  <p class="sub">
+    Analýza sezónních indexů, trendů značek a korelací z dat 2025–2026.
+    Nákup probíhá 6–9 měsíců předem → dnešní rozhodnutí pokrývají prodejní období
+    <strong style="color:#93c5fd">leden–červen 2027</strong>.
+  </p>
+  <div class="meta-row">
+    <span class="meta-pill">📅 Datum: 26. 6. 2026</span>
+    <span class="meta-pill">📊 Data: leden 2025 – červen 2026 (18 měsíců)</span>
+    <span class="meta-pill">🛒 Nákupní okno: červenec 2026 – únor 2027</span>
+    <span class="meta-pill">🎯 Prodejní cíl: Q1–Q2 2027</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ═══ DATOVÁ ZÁKLADNA ═══ -->
+  <section>
+    <h2>Datová základna a limity predikce</h2>
+    <div class="two-col">
+      <div class="alert blue">
+        <div class="alert-icon">ℹ️</div>
+        <div>
+          <h4>Co máme k dispozici</h4>
+          <p>
+            <strong>159 657 faktur</strong> za 18 měsíců (leden 2025 – červen 2026), 292 232 fakturačních položek.
+            To nám dává <strong>jeden plný rok + 6 měsíců</strong> — dostatečné pro sezónní vzory,
+            ale <em>nedostatečné pro víceletý trend</em>. DE data jsou kompletní teprve od října 2025.
+          </p>
+        </div>
+      </div>
+      <div class="alert orange">
+        <div class="alert-icon">⚠️</div>
+        <div>
+          <h4>Hlavní limit: 1 rok dat</h4>
+          <p>
+            Nemáme data před rokem 2025. Sezónní vzory jsou spolehlivé, ale <em>nelze odlišit
+            jednorázový výkyv od trvalého trendu</em>. Saguaro +472 % může být nástup nové značky
+            i fluke. Každý silný trend doporučuji ověřit externě (Google Trends, industry reports).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TRENDY ZNAČEK ═══ -->
+  <section>
+    <h2>Trendy značek — H1 2025 vs. H1 2027 (srovnatelné půlroky)</h2>
+
+    <div class="alert green" style="margin-bottom:20px">
+      <div class="alert-icon">💡</div>
+      <div>
+        <h4>Jak číst tabulku</h4>
+        <p>
+          Porovnání <strong>leden–červen 2025</strong> vs. <strong>leden–červen 2026</strong> — totožné měsíce,
+          eliminuje sezónní zkreslení. Základ predikce: pokud trend pokračuje stejným tempem,
+          takový bude H1 2027. Berte jako indikátor, ne jistotu.
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>Top 25 značek — meziroční změna v kusech (H1 2025 → H1 2026)</h3>
+        <span class="tag tag-blue">CZ + SK + DE dohromady</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Značka</th>
+            <th style="text-align:right">H1 2025 (ks)</th>
+            <th style="text-align:right">H1 2026 (ks)</th>
+            <th>Trend</th>
+            <th>Doporučení pro 2027</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- ROSTOUCÍ -->
+          <tr>
+            <td class="brand-name">🚀 Saguaro</td>
+            <td class="num">1 101</td>
+            <td class="num" style="color:var(--green)">6 294</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-up" style="width:100%"></div></div>
+                <span class="trend-pct pct-up">+472 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-green">Výrazně navýšit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">🚀 Geox</td>
+            <td class="num">93</td>
+            <td class="num" style="color:var(--green)">846</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-up" style="width:100%"></div></div>
+                <span class="trend-pct pct-up">+810 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-orange">Navýšit (ověřit základ)</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📈 Baby Bare</td>
+            <td class="num">836</td>
+            <td class="num" style="color:var(--green)">1 802</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-up" style="width:90%"></div></div>
+                <span class="trend-pct pct-up">+116 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-green">Navýšit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📈 Fare</td>
+            <td class="num">654</td>
+            <td class="num" style="color:var(--green)">1 458</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-up" style="width:88%"></div></div>
+                <span class="trend-pct pct-up">+123 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-green">Navýšit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📈 D.D.step</td>
+            <td class="num">2 512</td>
+            <td class="num" style="color:var(--green)">3 997</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-up" style="width:60%"></div></div>
+                <span class="trend-pct pct-up">+59 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-green">Navýšit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📈 Igor</td>
+            <td class="num">1 786</td>
+            <td class="num" style="color:var(--green)">2 682</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-up" style="width:50%"></div></div>
+                <span class="trend-pct pct-up">+50 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-green">Navýšit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📈 Garvalín</td>
+            <td class="num">647</td>
+            <td class="num" style="color:var(--green)">902</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-up" style="width:40%"></div></div>
+                <span class="trend-pct pct-up">+39 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-green">Mírně navýšit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📈 KOEL</td>
+            <td class="num">13 399</td>
+            <td class="num" style="color:var(--green)">17 461</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-up" style="width:30%"></div></div>
+                <span class="trend-pct pct-up">+30 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-green">Navýšit (core brand)</span></td>
+          </tr>
+          <!-- STABILNÍ -->
+          <tr>
+            <td class="brand-name">➡️ Froddo</td>
+            <td class="num">13 954</td>
+            <td class="num">15 293</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-flat" style="width:10%"></div></div>
+                <span class="trend-pct pct-flat">+10 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-orange">Udržet objem</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">➡️ Jonap</td>
+            <td class="num">4 611</td>
+            <td class="num">5 091</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-flat" style="width:10%"></div></div>
+                <span class="trend-pct pct-flat">+10 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-orange">Udržet objem</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">➡️ Bundgaard</td>
+            <td class="num">1 511</td>
+            <td class="num">1 706</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-flat" style="width:13%"></div></div>
+                <span class="trend-pct pct-flat">+13 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-orange">Udržet</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">➡️ VoXX / Voxx</td>
+            <td class="num">2 019</td>
+            <td class="num">2 185</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-flat" style="width:8%"></div></div>
+                <span class="trend-pct pct-flat">+8 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-gray">Udržet (doplněk)</span></td>
+          </tr>
+          <!-- KLESAJÍCÍ -->
+          <tr>
+            <td class="brand-name">📉 Be Lenka</td>
+            <td class="num">2 850</td>
+            <td class="num" style="color:var(--red)">1 450</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-down" style="width:49%"></div></div>
+                <span class="trend-pct pct-down">−49 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-red">Výrazně snížit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📉 Reima</td>
+            <td class="num">2 345</td>
+            <td class="num" style="color:var(--red)">1 196</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-down" style="width:49%"></div></div>
+                <span class="trend-pct pct-down">−49 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-red">Snížit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📉 Protetika</td>
+            <td class="num">4 710</td>
+            <td class="num" style="color:var(--red)">3 199</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-down" style="width:32%"></div></div>
+                <span class="trend-pct pct-down">−32 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-red">Snížit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📉 Collonil</td>
+            <td class="num">2 600</td>
+            <td class="num" style="color:var(--red)">1 705</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-down" style="width:34%"></div></div>
+                <span class="trend-pct pct-down">−34 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-red">Snížit (impregnace)</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📉 Beda</td>
+            <td class="num">4 445</td>
+            <td class="num" style="color:var(--red)">3 433</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-down" style="width:23%"></div></div>
+                <span class="trend-pct pct-down">−23 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-red">Mírně snížit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📉 Bobux</td>
+            <td class="num">1 662</td>
+            <td class="num" style="color:var(--red)">1 384</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-down" style="width:17%"></div></div>
+                <span class="trend-pct pct-down">−17 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-orange">Mírně snížit</span></td>
+          </tr>
+          <tr>
+            <td class="brand-name">📉 Xero Shoes</td>
+            <td class="num">1 681</td>
+            <td class="num" style="color:var(--red)">1 385</td>
+            <td>
+              <div class="trend-bar-wrap">
+                <div class="trend-bar-bg"><div class="trend-bar-fill bar-down" style="width:18%"></div></div>
+                <span class="trend-pct pct-down">−18 %</span>
+              </div>
+            </td>
+            <td><span class="tag tag-orange">Mírně snížit</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ SEZÓNNÍ INDEXY ═══ -->
+  <section>
+    <h2>Sezónní indexy kategorií — vzory z roku 2025 (index 100 = průměrný měsíc)</h2>
+
+    <div class="alert blue" style="margin-bottom:20px">
+      <div class="alert-icon">📈</div>
+      <div>
+        <h4>Jak číst grafy</h4>
+        <p>Index 200 = daný měsíc prodáte 2× více než je měsíční průměr. Index 50 = polovina průměru.
+        Výška sloupce reprezentuje relativní intenzitu poptávky, ne absolutní objem.
+        Červenec–prosinec 2025 máme kompletní, 2026 porovnáváme průběžně.</p>
+      </div>
+    </div>
+
+    <div class="season-grid">
+
+      <!-- SANDÁLY -->
+      <div class="season-card">
+        <h4>👡 Sandály (CZ) + Sandalen (DE) — léto dominuje</h4>
+        <div class="season-months">
+          <!-- CZ sandály: J F M A M J J A S O N D — index: 19 8 43 110 193 438 282 79 18 1 5 3 -->
+          <!-- DE Sandalen: 6 8 18 120 273 598 124 40 8 1 1 3 -->
+          <!-- Combined roughly average both -->
+          <div class="s-bar-wrap"><div class="s-bar" style="height:7%;background:#3b82f6"></div><div class="s-label">L</div><div class="s-val">12</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:8%;background:#3b82f6"></div><div class="s-label">Ú</div><div class="s-val">8</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:15%;background:#3b82f6"></div><div class="s-label">B</div><div class="s-val">30</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:30%;background:#f59e0b"></div><div class="s-label">D</div><div class="s-val">115</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:58%;background:#f59e0b"></div><div class="s-label">K</div><div class="s-val">233</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:100%;background:#ef4444"></div><div class="s-label">Č</div><div class="s-val">518</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:52%;background:#f59e0b"></div><div class="s-label">S</div><div class="s-val">203</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:15%;background:#3b82f6"></div><div class="s-label">Sp</div><div class="s-val">60</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:7%;background:#94a3b8"></div><div class="s-label">Z</div><div class="s-val">13</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:2%;background:#94a3b8"></div><div class="s-label">Ř</div><div class="s-val">1</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:2%;background:#94a3b8"></div><div class="s-label">N</div><div class="s-val">3</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:2%;background:#94a3b8"></div><div class="s-label">P</div><div class="s-val">3</div></div>
+        </div>
+        <p class="peak-label">
+          📦 <strong>Objednat:</strong> září–říjen 2026 (dodávka prosinec–leden, prodej duben–červen 2027).<br>
+          🔴 Peak červen: zásoby musí být na e-shopu od dubna.
+        </p>
+      </div>
+
+      <!-- KOTNÍKOVÁ OBUV -->
+      <div class="season-card">
+        <h4>👟 Kotníková obuv (CZ) + Halbschuhe (DE) — dvě okna</h4>
+        <div class="season-months">
+          <!-- CZ: 17 38 122 30 21 6 15 189 419 281 48 14 -->
+          <!-- DE: 4 51 411 207 150 40 78 140 90 17 7 4 -->
+          <!-- Average: 11 45 267 119 86 23 47 165 255 149 28 9 -->
+          <div class="s-bar-wrap"><div class="s-bar" style="height:4%;background:#94a3b8"></div><div class="s-label">L</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:18%;background:#3b82f6"></div><div class="s-label">Ú</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:100%;background:#ef4444"></div><div class="s-label">B</div><div class="s-val">peak</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:45%;background:#f59e0b"></div><div class="s-label">D</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:32%;background:#f59e0b"></div><div class="s-label">K</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:9%;background:#94a3b8"></div><div class="s-label">Č</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:18%;background:#94a3b8"></div><div class="s-label">S</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:62%;background:#f59e0b"></div><div class="s-label">Sp</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:96%;background:#ef4444"></div><div class="s-label">Z</div><div class="s-val">peak</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:56%;background:#f59e0b"></div><div class="s-label">Ř</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:11%;background:#94a3b8"></div><div class="s-label">N</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:5%;background:#94a3b8"></div><div class="s-label">P</div></div>
+        </div>
+        <p class="peak-label">
+          📦 <strong>2 nákupní okna:</strong><br>
+          1) na JARNÍ peak (březen): objednat <strong>září–říjen 2026</strong><br>
+          2) na PODZIMNÍ peak (září–říjen): objednat <strong>leden–únor 2027</strong>
+        </p>
+      </div>
+
+      <!-- SNEAKER / TENISKY -->
+      <div class="season-card">
+        <h4>👟 Tenisky (CZ) + Sneaker (DE) — dvě sezóny, stabilní rok</h4>
+        <div class="season-months">
+          <!-- CZ: 32 41 134 162 125 141 179 196 87 50 29 23 -->
+          <!-- DE: 15 28 208 267 161 121 92 189 89 13 12 7 -->
+          <!-- avg: 24 35 171 215 143 131 136 193 88 32 21 15 -->
+          <div class="s-bar-wrap"><div class="s-bar" style="height:11%;background:#94a3b8"></div><div class="s-label">L</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:16%;background:#94a3b8"></div><div class="s-label">Ú</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:79%;background:#f59e0b"></div><div class="s-label">B</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:100%;background:#ef4444"></div><div class="s-label">D</div><div class="s-val">peak</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:66%;background:#f59e0b"></div><div class="s-label">K</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:61%;background:#f59e0b"></div><div class="s-label">Č</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:63%;background:#f59e0b"></div><div class="s-label">S</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:89%;background:#f59e0b"></div><div class="s-label">Sp</div><div class="s-val">peak2</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:41%;background:#3b82f6"></div><div class="s-label">Z</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:15%;background:#94a3b8"></div><div class="s-label">Ř</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:10%;background:#94a3b8"></div><div class="s-label">N</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:7%;background:#94a3b8"></div><div class="s-label">P</div></div>
+        </div>
+        <p class="peak-label">
+          📦 <strong>Peaky:</strong> duben (předzásobení na jaro) + srpen (back-to-school).<br>
+          Na Q1 2027: zásoby tenisek musí být k dispozici od <strong>února 2027</strong> — objednat <strong>nejpozději červenec 2026</strong>.
+        </p>
+      </div>
+
+      <!-- ZIMNÍ / STIEFEL -->
+      <div class="season-card">
+        <h4>🥾 Zimní / Stiefel — ostrý podzimní peak</h4>
+        <div class="season-months">
+          <!-- CZ kotníková (podzimní část) + DE Stiefel: 94 36 32 11 6 - 2 20 38 279 504 77 -->
+          <div class="s-bar-wrap"><div class="s-bar" style="height:19%;background:#94a3b8"></div><div class="s-label">L</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:7%;background:#94a3b8"></div><div class="s-label">Ú</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:6%;background:#94a3b8"></div><div class="s-label">B</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:2%;background:#94a3b8"></div><div class="s-label">D</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:1%;background:#94a3b8"></div><div class="s-label">K</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:0%;background:#94a3b8"></div><div class="s-label">Č</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:0%;background:#94a3b8"></div><div class="s-label">S</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:4%;background:#3b82f6"></div><div class="s-label">Sp</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:8%;background:#3b82f6"></div><div class="s-label">Z</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:55%;background:#f59e0b"></div><div class="s-label">Ř</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:100%;background:#ef4444"></div><div class="s-label">N</div><div class="s-val">peak</div></div>
+          <div class="s-bar-wrap"><div class="s-bar" style="height:15%;background:#3b82f6"></div><div class="s-label">P</div></div>
+        </div>
+        <p class="peak-label">
+          📦 <strong>Sezóna:</strong> říjen–listopad. Na Q1 2027 tento typ <em>není priorita</em> — zimy přijdou pozdě.
+          Pozor: zákazníci kupují zimní boty výrazně před jejich potřebou (září = poptávka na říjen).
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ NÁKUPNÍ KALENDÁŘ ═══ -->
+  <section>
+    <h2>Doporučený nákupní kalendář — červenec 2026 → duben 2027</h2>
+
+    <div class="alert green" style="margin-bottom:20px">
+      <div class="alert-icon">🎯</div>
+      <div>
+        <h4>Logika kalendáře</h4>
+        <p>
+          Lead time 6–9 měsíců: objednávka <strong>červenec 2026 → prodej leden–únor 2027</strong>.
+          Objednávka <strong>říjen 2026 → prodej duben–květen 2027</strong>.
+          Poptávkový peak musí být na skladě <em>nejpozději 3–4 týdny před ním</em>.
+        </p>
+      </div>
+    </div>
+
+    <div class="buy-cal">
+      <div class="buy-month">
+        <div class="bm-name">📅 Červenec 2026 <span style="font-size:10px;color:var(--accent);font-weight:700">← TEĎ</span></div>
+        <div class="bm-item"><span class="bm-dot dot-hot"></span><span>Tenisky / Sneaker — jarní kolekce 2027 (duben = peak)</span></div>
+        <div class="bm-item"><span class="bm-dot dot-hot"></span><span>Saguaro — rostoucí trend, objednat max. kapacitu</span></div>
+        <div class="bm-item"><span class="bm-dot dot-hot"></span><span>Baby Bare + Fare — potvrzený růst +115 %</span></div>
+        <div class="bm-item"><span class="bm-dot dot-med"></span><span>D.D.step — dětská obuv, jarní modely</span></div>
+      </div>
+      <div class="buy-month">
+        <div class="bm-name">📅 Srpen 2026</div>
+        <div class="bm-item"><span class="bm-dot dot-hot"></span><span>Sandály — jarní/letní modely 2027 (červen 2027 = MAX)</span></div>
+        <div class="bm-item"><span class="bm-dot dot-hot"></span><span>KOEL — core brand +30 %, sandálová kolekce</span></div>
+        <div class="bm-item"><span class="bm-dot dot-med"></span><span>Froddo — stabilní objem, doplnit zásoby</span></div>
+        <div class="bm-item"><span class="bm-dot dot-med"></span><span>Igor — rostoucí +50 %, dětské sandály</span></div>
+      </div>
+      <div class="buy-month">
+        <div class="bm-name">📅 Září–říjen 2026</div>
+        <div class="bm-item"><span class="bm-dot dot-hot"></span><span>Kotníková obuv — jarní peak březen 2027 (index 267)</span></div>
+        <div class="bm-item"><span class="bm-dot dot-hot"></span><span>Halbschuhe (DE) — největší DE kategorie, březen = 411</span></div>
+        <div class="bm-item"><span class="bm-dot dot-med"></span><span>Doplňky / Collonil — SNÍŽIT objem (−34 %)</span></div>
+        <div class="bm-item"><span class="bm-dot dot-low"></span><span>Zimní obuv — redukovat, sezóna končí v Q1</span></div>
+      </div>
+      <div class="buy-month">
+        <div class="bm-name">📅 Říjen–prosinec 2026</div>
+        <div class="bm-item"><span class="bm-dot dot-med"></span><span>Garvalín — mírný růst +39 %, jarní kolekce</span></div>
+        <div class="bm-item"><span class="bm-dot dot-med"></span><span>Bundgaard — stabilní +13 %</span></div>
+        <div class="bm-item"><span class="bm-dot dot-low"></span><span>Be Lenka — výrazně redukovat (−49 %)</span></div>
+        <div class="bm-item"><span class="bm-dot dot-low"></span><span>Protetika — snížit objednávky (−32 %)</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ KORELACE ═══ -->
+  <section>
+    <h2>Nalezené korelace a prediktivní signály</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+      <div class="corr-item ci-strong">
+        <h4>Podzimní sell-through → jarní objednávky</h4>
+        <p>
+          Kategorie Kotníková obuv má double peak — březen a září/říjen. <strong>Pokud zásoby v říjnu
+          2026 rychle odejdou</strong>, je to signál, že poptávka na jaro 2027 bude silná.
+          Sleduj sell-through rate v říjnu/listopadu jako leading indicator pro jarní kampaň.
+        </p>
+        <span class="corr-strength">✅ Interní signal · Dostupný hned</span>
+      </div>
+
+      <div class="corr-item ci-strong">
+        <h4>Meziroční trend brand × sezóna</h4>
+        <p>
+          <strong>Saguaro roste přes všechny kategorie</strong> (+472 % H1). Protože tento růst
+          probíhal v H1 (jaro/léto), je vysoce pravděpodobné, že jarní kolekce Saguaro 2027
+          bude opět silná. Trend se teprve etabluje — zákazníci značku objevují.
+        </p>
+        <span class="corr-strength">✅ Přímý výpočet z dat</span>
+      </div>
+
+      <div class="corr-item ci-medium">
+        <h4>Pokles dospělé obuv CZ vs. růst DE</h4>
+        <p>
+          „Obuv pro dospělé" (CZ) klesá H1 o cca −15 %, zatímco „Schuhe für Erwachsene" (DE)
+          roste. To může naznačovat, že CZ zákazník přechází na jiné značky, nebo že CZ segment
+          stagnuje a DE je growth engine. <strong>Prioritizovat dospělou obuv na DE trhu.</strong>
+        </p>
+        <span class="corr-strength">⚠️ Částečně potvrzeno · Sledovat</span>
+      </div>
+
+      <div class="corr-item ci-medium">
+        <h4>Dětská obuv — CZ vs. DE sezóna</h4>
+        <p>
+          CZ Dětská obuv: výrazný peak v <strong>září</strong> (index 660 — back-to-school).
+          DE Kinderschuhe: peak v <strong>březnu + květnu</strong> (index 411 a 200) — jarní.
+          Různé sezóny = lze lépe přerozdělovat zásoby mezi trhy místo zbytečné nadváhy.
+        </p>
+        <span class="corr-strength">✅ Přímý výpočet z dat</span>
+      </div>
+
+      <div class="corr-item ci-ext">
+        <h4>🔎 Doporučená externí korelace: Google Trends</h4>
+        <p>
+          Poptávka po barefoot botách typicky roste 4–8 týdnů před sezónním peakem
+          (lidé hledají dřív, než kupují). Google Trends pro „barefoot boty", „barfussschuhe",
+          „barefoot shoes" = leading indicator ~6 týdnů před peakem prodejů.
+          <strong>Koreluj s tvojí sezónní křivkou z 2025.</strong>
+        </p>
+        <span class="corr-strength">🟣 Potřeba ruční validace · Bezplatná data</span>
+      </div>
+
+      <div class="corr-item ci-ext">
+        <h4>🔎 Doporučená externa: porodnost + věkové kohorty</h4>
+        <p>
+          Dětská obuv (tvůj největší segment) je přímá funkce počtu dětí věku 1–12 let.
+          Porodnost v ČR klesá od 2021 — to může být strukturální headwind pro dětský segment
+          v 3–5letém horizontu. <strong>Sleduj: Eurostat porodnost, počet žáků ZŠ.</strong>
+        </p>
+        <span class="corr-strength">🟣 Volná data · Eurostat / ČSÚ</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ RIZIKA ═══ -->
+  <section>
+    <h2>Rizika predikce — na co si dát pozor</h2>
+    <div class="card">
+      <div class="card-body">
+        <div class="risk-row">
+          <div class="risk-icon">📊</div>
+          <div class="risk-text">
+            <h4>Pouze 1 rok historických dat</h4>
+            <p>Nelze odlišit strukturální trend od jednorázového výkyvu. Saguaro +472 % — je to launch efekt nebo trvale nový zákazník? Druhý rok potvrdí nebo vyvrátí. <strong>Konzervativní přístup: nenaobjednávat víc než 2× objem 2026.</strong></p>
+          </div>
+        </div>
+        <div class="risk-row">
+          <div class="risk-icon">🌦️</div>
+          <div class="risk-text">
+            <h4>Počasí posouvá sezónu o 2–4 týdny</h4>
+            <p>Chladné jaro zpozdí sandálový peak. Teplá zima vyprázdní zimní zásoby. Data 2025 jsou "normální rok" — jeden extrémní rok zkreslí baseline.</p>
+          </div>
+        </div>
+        <div class="risk-row">
+          <div class="risk-icon">💶</div>
+          <div class="risk-text">
+            <h4>Kurz CZK/EUR a inflace</h4>
+            <p>Nákupy v EUR, prodej v CZK. Pokud CZK oslabí, marže se sníží aniž by se poptávka změnila. Tento faktor data neobsahují — je třeba přidat do kalkulace nákupní ceny.</p>
+          </div>
+        </div>
+        <div class="risk-row">
+          <div class="risk-icon">🏪</div>
+          <div class="risk-text">
+            <h4>Konkurenční akce v hnané sezóně</h4>
+            <p>Velká sleva konkurenta v březnu může stáhnout poptávku. Data neobsahují competitor pricing — sezónní index předpokládá stabilní tržní podmínky.</p>
+          </div>
+        </div>
+        <div class="risk-row" style="border-bottom:none">
+          <div class="risk-icon">🔄</div>
+          <div class="risk-text">
+            <h4>DE trh je mladý (data od října 2025)</h4>
+            <p>DE sezónní vzory jsou z pouhých 9 měsíců. Nevidíme DE jaro 2025 vůbec. Sezónní indexy pro Kinderschuhe/Sandalen/Sneaker (DE) jsou méně spolehlivé než CZ data.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SHRNUTÍ ═══ -->
+  <section>
+    <h2>Výkonnostní shrnutí — co dělat teď (červenec 2026)</h2>
+    <div class="three-col">
+      <div class="card" style="border-top:3px solid var(--green)">
+        <div class="card-body">
+          <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--green)">✅ NAVÝŠIT NÁKUP</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+            <li>🚀 <strong>Saguaro</strong> — max. dostupná kapacita</li>
+            <li>📈 <strong>Baby Bare</strong> — +115 %, dětské modely</li>
+            <li>📈 <strong>Fare</strong> — +123 %, dětský segment</li>
+            <li>📈 <strong>D.D.step</strong> — solidní +59 %</li>
+            <li>📈 <strong>Igor</strong> — +50 %, letní sandály</li>
+            <li>📈 <strong>KOEL</strong> — core brand, +30 %</li>
+            <li>📈 <strong>Garvalín</strong> — +39 %, jarní kolekce</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--orange)">
+        <div class="card-body">
+          <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--orange)">➡️ UDRŽET STÁVAJÍCÍ</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+            <li>➡️ <strong>Froddo</strong> — stabilní +10 %</li>
+            <li>➡️ <strong>Jonap</strong> — stabilní +10 %</li>
+            <li>➡️ <strong>Bundgaard</strong> — +13 %, niche</li>
+            <li>➡️ <strong>VoXX</strong> — pnožky, doplněk</li>
+            <li>➡️ <strong>Pegres</strong> — +14 %, malý objem</li>
+            <li>➡️ <strong>Tip Toey Joey</strong> — +4 %</li>
+            <li>⚠️ <strong>Geox</strong> — +810 %, ale ověřit základ</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--red)">
+        <div class="card-body">
+          <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--red)">📉 SNÍŽIT / VYŘADIT</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+            <li>❌ <strong>Be Lenka</strong> — −49 %, výrazně snížit</li>
+            <li>❌ <strong>Reima</strong> — −49 %, přehodnotit</li>
+            <li>❌ <strong>Protetika</strong> — −32 %, snížit</li>
+            <li>❌ <strong>Collonil</strong> — −34 %, méně impreg.</li>
+            <li>📉 <strong>Beda</strong> — −23 %, mírně snížit</li>
+            <li>📉 <strong>Bobux</strong> — −17 %, mírně snížit</li>
+            <li>📉 <strong>Xero Shoes</strong> — −18 %, mírně snížit</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Bosono s.r.o. · Prediktivní analýza nákupu Q1–Q2 2027 · Claude Code · 26. 6. 2026<br>
+  Zdroj: shoptet_invoices (159 657 řádků) + shoptet_invoice_items (292 232 řádků) · leden 2025 – červen 2026
+</footer>
+
+</body>
+</html>
