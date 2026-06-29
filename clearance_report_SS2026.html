@@ -325,19 +325,32 @@ tbody tr:hover{background:var(--sur2);}
 </div>
 
 <!-- KROK 4: KATEGORIE -->
-<div class="sec">
-  <div class="sec-title">4. Kategoriální breakdown</div>
-  <div class="twrap">
-    <table><thead><tr><th>Kategorie</th><th class="num">SKU</th><th class="num">Sklad (ks)</th><th class="num">Nák. hod.</th><th class="num">Prodeje 8t</th><th class="num">% mrtva</th><th class="num">Podíl skladu</th><th>Komentář</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Sandály</strong></td><td class="num">1 390</td><td class="num">3 748</td><td class="num">2 957 972</td><td class="num">845</td><td class="num"><span class="badge badge-danger">67.5 %</span></td><td class="num">55.8 %</td><td>Dominantní blok — největší riziko nevyčištění</td></tr>
-      <tr><td><strong>Barefoot plátěnky</strong></td><td class="num">401</td><td class="num">1 437</td><td class="num">751 215</td><td class="num">445</td><td class="num"><span class="badge badge-warning">63.1 %</span></td><td class="num">21.4 %</td><td>Nejlepší pohyb z velk. kategorií (45 prodejů/8t rel.)</td></tr>
-      <tr><td><strong>Baleríny</strong></td><td class="num">375</td><td class="num">733</td><td class="num">765 429</td><td class="num">103</td><td class="num"><span class="badge badge-danger">82.4 %</span></td><td class="num">10.9 %</td><td>Mimo sezónu, nízký zájem — zvážit přesun do AW kampáně</td></tr>
-      <tr><td><strong>Plátěnky</strong></td><td class="num">117</td><td class="num">466</td><td class="num">375 924</td><td class="num">91</td><td class="num"><span class="badge badge-danger">76.9 %</span></td><td class="num">6.9 %</td><td>Slabý pohyb — extrémní velikosti do outletu</td></tr>
-      <tr><td><strong>Mokasíny</strong></td><td class="num">63</td><td class="num">113</td><td class="num">142 668</td><td class="num">13</td><td class="num"><span class="badge badge-danger">85.7 %</span></td><td class="num">1.7 %</td><td>Mimo sezónu úplně — pouze outlet/bundle</td></tr>
-      <tr><td><strong>Obuv do vody</strong></td><td class="num">42</td><td class="num">224</td><td class="num">40 629</td><td class="num">66</td><td class="num"><span class="badge badge-ok">47.6 %</span></td><td class="num">3.3 %</td><td>✅ Nejlepší výkon — sezóna stále trvá, ponechat</td></tr>
-    </tbody></table>
+<div class="sec" id="categories">
+  <div class="sec-title">4. Kategoriální breakdown — skutečná DB data</div>
+  <div class="alert" style="margin-bottom:10px;">
+    Kategorie = Shoptet <code>default_category_name</code>, ověřeno JOIN přes <code>shoptet_product_variants → shoptet_products</code> (CZ site). Prodeje = skutečné transakce 15.–28. 6. 2026.
   </div>
+  <div class="twrap">
+    <table><thead><tr>
+      <th>Kategorie</th><th class="num">SKU</th><th class="num">Sklad (ks)</th><th class="num">Vázaný kap.</th>
+      <th class="num">Ø sleva</th><th class="num">Ø marže</th>
+      <th class="num">Prodáno (14d)</th><th class="num">Obrat (14d)</th>
+      <th class="num">Marže %</th><th class="num">Sell-through</th><th class="num">Dny do výprodeje</th>
+    </tr></thead>
+    <tbody>
+      <tr><td><strong>Sandály</strong></td><td class="num">1 385</td><td class="num">3 748</td><td class="num">2 958 k</td><td class="num">32 %</td><td class="num">27 %</td><td class="num">334</td><td class="num">407 k</td><td class="num">35.9 %</td><td class="num"><span class="badge badge-warning">8.9 %</span></td><td class="num"><span class="badge badge-danger">157d</span></td></tr>
+      <tr><td><strong>Barefoot plátěnky</strong></td><td class="num">376</td><td class="num">1 437</td><td class="num">751 k</td><td class="num">31 %</td><td class="num">25 %</td><td class="num">74</td><td class="num">55 k</td><td class="num">28.1 %</td><td class="num"><span class="badge badge-warning">5.2 %</span></td><td class="num"><span class="badge badge-danger">272d</span></td></tr>
+      <tr><td><strong>Baleríny</strong></td><td class="num">372</td><td class="num">733</td><td class="num">765 k</td><td class="num">33 %</td><td class="num">23 %</td><td class="num">25</td><td class="num">38 k</td><td class="num">36.8 %</td><td class="num"><span class="badge badge-danger">3.4 %</span></td><td class="num"><span class="badge badge-danger">410d</span></td></tr>
+      <tr><td><strong>Plátěnky</strong></td><td class="num">117</td><td class="num">466</td><td class="num">376 k</td><td class="num">33 %</td><td class="num">26 %</td><td class="num">31</td><td class="num">31 k</td><td class="num">27.4 %</td><td class="num"><span class="badge badge-danger">6.6 %</span></td><td class="num"><span class="badge badge-danger">211d</span></td></tr>
+      <tr><td><strong>Obuv do vody</strong></td><td class="num">42</td><td class="num">224</td><td class="num">41 k</td><td class="num">31 %</td><td class="num">40 %</td><td class="num">29</td><td class="num">12 k</td><td class="num">50.2 %</td><td class="num"><span class="badge badge-ok">12.9 %</span></td><td class="num"><span class="badge badge-ok">108d</span></td></tr>
+      <tr><td><strong>Mokasíny</strong></td><td class="num">63</td><td class="num">113</td><td class="num">143 k</td><td class="num">34 %</td><td class="num">24 %</td><td class="num">2</td><td class="num">4 k</td><td class="num">53.0 %</td><td class="num"><span class="badge badge-danger">1.8 %</span></td><td class="num"><span class="badge badge-danger">791d</span></td></tr>
+    </tbody>
+    <tfoot><tr style="font-weight:600;border-top:1px solid #3d4266;">
+      <td>CELKEM</td><td class="num">2 355</td><td class="num">6 721</td><td class="num">5 034 k</td><td class="num">—</td><td class="num">—</td><td class="num">495</td><td class="num">548 k</td><td class="num">—</td><td class="num"><span class="badge badge-warning">7.4 %</span></td><td class="num">—</td>
+    </tr></tfoot>
+    </table>
+  </div>
+  <p class="fn" style="margin-top:6px;">Sklad = živý stav k 29. 6. 2026 z <code>shoptet_product_variants.stock</code>. Sell-through = prodáno / sklad za 14 dní. Dny do výprodeje = sklad / (prodáno za 14d × 14). Baleríny a Mokasíny jsou kritické — tempo nestačí na vyčištění do konce sezóny.</p>
 </div>
 
 <!-- KROK 5: MARŽE -->
